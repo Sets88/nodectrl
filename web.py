@@ -16,6 +16,8 @@ sw_api = NodesAPI(settings['db'])
 
 auth = Auth(settings['users'], settings['secret'])
 
+app.secret_key = str(settings['secret'])
+
 cookies = {}
 
 
@@ -298,6 +300,6 @@ def ajax():
 if __name__ == "__main__":
     #app.debug = True
     #DEBUG_WITH_APTANA: True
-    #app.run(use_debugger=True, debug=True,
-    #        use_reloader=True)
-    app.run()
+    app.run(use_debugger=True, debug=True,
+            use_reloader=True)
+    #app.run()

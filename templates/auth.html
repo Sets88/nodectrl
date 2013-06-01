@@ -22,7 +22,7 @@
 	<tr>
 		<td><input name="remember" type="checkbox"></td><td><font color=white> Помнить меня</font></td>
 	<tr>
-		<td colspan=2 align=right><span style="font-size:14;color:red">{{ error }} </span><input type='submit' value="Войти"></td>
+		<td colspan=2 align=right><span style="font-size:14;color:red">{% with messages = get_flashed_messages() %}{% for message in messages %}{{ message }}{% endfor %}{% endwith %}</span><input type='submit' value="Войти"></td>
 	</tr>
 </form>
 </div>

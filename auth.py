@@ -1,6 +1,7 @@
 from flask import render_template
 from flask import make_response
 from flask import request, redirect
+from flask import flash, url_for
 from hashlib import sha512
 
 class Auth(object):
@@ -12,9 +13,11 @@ class Auth(object):
         if (request.method == "POST"):
             try:
                 if self.userlist[request.form['login']] != request.form['pass']:
-                    raise(KeyError)
+                    flash("Oops, Login Error")
+                    redirect(url_for("login"))
             except KeyError:
-                return render_template("auth.html", login=request.form['login'], error="Oops, Login Error")
+                flash("Oops, Login Error")
+                redirect(url_for("login"))
 
             response = make_response(redirect("/"))
             try:
