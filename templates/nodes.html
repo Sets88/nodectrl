@@ -1,0 +1,89 @@
+{% extends "main.html" %}
+{% block nodes %}
+<div class="ipgroup" id="0">
+	<ul style="margin-left:0px;">
+{% for node in nodes recursive %}
+<div class="ipgroup" id="{{node.id}}">
+	{% if act == "edit" and id == node.id %}
+		<div class="withip">
+			<form class="navbar-form" method="POST" action="editnode/{{node.id}}/">
+				<input type="text" value="{{ node.comment }}" name="comment" id="{{ node.id }}">
+				<input type="text" value="{{ node.ipaddr }}" name="ip">
+				<input type="text" style="width:40px;" value="{{ node.port }}" name="port">
+				<input type="submit" value="Изменить" name="submit">
+				<span class="adminbut"></span>
+			</form>
+		</div>
+	{% elif act == "move" and id == node.id %}
+		<div class="withip">
+			{% include "moveform.html" %}
+		</div>
+	{% else %}
+		{% if node.ip %}
+		<div class="withip">
+			{% if node.status %}
+				<span class="normal-ip">
+			{% else %}
+				<span class="label label-important">
+			{% endif %}
+				<small>
+					{% if node.port %}
+					{{ node.port }}
+					{% endif %}
+				</small>
+				<a href="http://{{ node.ipaddr }}/" class="linkb" target="_blank" title="">{{ node.comment }}</a>
+				</span>
+				(
+					<span class="ipaddr">{{ node.ipaddr }}</span>
+				)
+		{% else %}
+		<div class="noip">
+				<small>
+					{% if node.port %}
+					{{ node.port }}
+					{% endif %}
+				</small>
+			{{ node.comment }}
+		{% endif %}
+			<span class="adminbut">
+				{% if node.flag %}
+				<a href="resetflag/{{ node.id }}/#{{ node.id }}" class="flag">
+					<img src="static/images/alert.png"></a>
+				{% endif %}
+				<a href="addnode/{{ node.id }}/#{{ node.id }}" class="add">
+					<img src="static/images/add.png"></a>
+				<a href="editnode/{{ node.id }}/#{{ node.id }}" class="edit">
+					<img src="static/images/edit.png"></a>
+				<a href="movenode/{{ node.id }}/" class="move">
+					<img src="static/images/move.png"></a>
+				<a href="deletenode/{{ node.id }}/" class="del" >
+					<img src="static/images/delete.png"></a>
+			</span>
+		</div>
+
+	{% endif %}
+		<ul>
+		{% if act == "add" and id == node.id %}
+			<form action="/addnode/{{ node.id }}/" method="POST" class="navbar-form">
+				<input name="comment" class="noevent" value="" type="text">
+				<input name="submit" class="addbutton btn" id="{{ node.id }}" value="Добавить" type="submit">
+			</form>
+		{% endif %}
+	{% if node.child_list %}
+		{{ loop(node.child_list) }}
+	{% endif %}
+		</ul>
+
+</div>
+{% endfor %}
+	<div class="ipgroup">
+		<div class="">
+			<form action="/addnode/0/" method="POST" class="navbar-form" id="addtoroot">
+				<input name="comment" class="noevent" value="" type="text">
+				<input name="submit" class="addbutton btn" id="0" value="Добавить" type="submit">
+			</form>
+		</div>
+	</div>
+</ul>
+</div>
+{% endblock %}

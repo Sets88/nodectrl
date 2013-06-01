@@ -1,0 +1,175 @@
+<script type="text/javascript">
+	function dec2bin(dec)
+	{
+		bin = ""
+		for(var i=0;i<32;i++)
+		{
+			if (i>=dec)
+				bin+="0"
+			else
+				bin+="1"
+		}
+		return bin
+	}
+	function ip2bin(mask)
+	{
+		maskarr = mask.split(".")
+		for (var i in maskarr)
+		{
+			if (maskarr[i] == 255)
+				maskarr[i] = "11111111"
+			else if (maskarr[i] == 0 )
+				maskarr[i] = "00000000"
+			else 
+			{
+				b = ""
+				for (var i1=0;i1<8;i1++)
+				{
+					b = (maskarr[i] % 2) + b
+        			maskarr[i] = Math.floor(maskarr[i]/2);
+        		}
+        		maskarr[i] = b
+			}
+
+		}
+		return maskarr.join("")
+	}
+	function bin2ip(bin)
+	{
+		barray = [128, 64, 32, 16, 8, 4, 2, 1]
+		octets = bin.match(/.{8}/g)
+		for (var octet in octets)
+		{
+			octets[octet] = parseInt(octets[octet],2)
+		}
+		return octets.join(".")
+	}
+	function ipSub(first, second)
+	{
+		first = parseInt(first, 2)
+		second = parseInt(second, 2)
+		return first - second + 1
+	}
+	function applyMask(ip, mask)
+	{
+		arr = [ip]
+		min = ""
+		max = ""
+		broadcast = ""
+		netid = ""
+		var newmask = ""
+		var finished = false
+		for (var i in mask)
+		{
+			if(mask[i] == 1 && !finished)
+			{
+				min = min + ip[i]
+				max = max + ip[i]
+				broadcast = broadcast + ip[i]
+				netid = netid + ip[i]
+				newmask = newmask + "1"
+			}
+			else
+			{
+				finished = true
+				netid = netid + "0"
+				newmask = newmask + "0"
+				broadcast = broadcast + "1"
+				if (i == 31)
+				{
+					min = min + "1"
+					max = max + "0"
+				}
+				else
+				{
+					max = max + "1"
+					min = min + "0"
+				}
+			}
+
+		}
+		arr.push(newmask)
+		arr.push(min)
+		arr.push(max)
+		arr.push(broadcast)
+		arr.push(netid)
+		return arr
+	}
+	function maskdec2bin(val)
+	{
+		if (val.length<3)
+			return dec2bin(val)
+		else
+			return ip2bin(val)
+	}
+	function changeFields(arr)
+	{
+		mask = document.getElementsByName("mask")[0]
+		firstip = document.getElementsByName("firstip")[0]
+		lastip = document.getElementsByName("lastip")[0]
+		broadcast = document.getElementsByName("broadcast")[0]
+		count = document.getElementsByName("count")[0]
+		netid = document.getElementsByName("netid")[0]
+
+		if (arr.length > 4)
+		{
+			mask.value = bin2ip(arr[1])
+			firstip.value = bin2ip(arr[2])
+			lastip.value = bin2ip(arr[3])
+			broadcast.value = bin2ip(arr[4])
+			netid.value = bin2ip(arr[5])
+			count.value = ipSub(arr[3], arr[2])
+		}
+	}
+	function countN(value)
+	{
+		var re = new RegExp("^([0-9]{1,3}\\\.){3}[0-9]{1,3}((/([0-9]{1,3}\\\.){3}[0-9]{1,3})|(/[0-9]{1,2}))$")
+		if (re.test(value))
+		{
+			var ip = value.split("/")
+			if (ip.length == 2)
+			{
+				res = applyMask(maskdec2bin(ip[0]),maskdec2bin(ip[1]))
+				if (res)
+					changeFields(res)
+			}
+		}
+	}
+</script>
+<table border="1">
+	<tr>
+		<td colspan=2><center><strong>{{ _('IP Calculator') }}</strong></center></td>
+	</tr>
+	<tr>
+		<td align="right">IP address/netmask:</td>
+		<td><input name="net" type="text" value="192.168.0.1/24" oninput="countN(this.value)"></td>
+	</tr>
+	<tr>
+		<td align="right">Netmask:</td>
+		<td><input name="mask" readonly value="255.255.255.0" type="text"></td>
+	</tr>
+	<tr>
+		<td align="right">Subnet ID:</td>
+		<td><input name="netid" value="192.168.0.0" readonly type="text"></td>
+	</tr>
+	<tr>
+		<td align="right">First IP:</td>
+		<td><input name="firstip" value="192.168.0.1" readonly type="text"></td>
+	</tr>
+	<tr>
+		<td align="right">Last IP:</td>
+		<td><input name="lastip" value="192.168.0.254" readonly type="text"></td>
+	</tr>
+	<tr>
+		<td align="right">Broadcast address:</td>
+		<td><input name="broadcast" value="192.168.0.255" readonly type="text"></td>
+	</tr>
+	<tr>
+		<td align="right">Hosts count:</td>
+		<td><input name="count" value="254" readonly type="text"></td>
+	</tr>
+	<tr>
+		<td colspan=2><center><a id="closeipcalc" href="#">Закрыть</a></center></td>
+	</tr>
+</table>
+
