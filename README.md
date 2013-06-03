@@ -4,7 +4,7 @@ nodectrl
 ## Описание
 Приложение основанное на Flask, позволяющее леко и непринужденно каталогизировать и управлять вашим сетевым оборудованием в локальной сети.
 
-![Screenshot](http://raw.github.com/Sets88/nodectrl/master/img/nodectrl.png)
+![Screenshot](/img/nodectrl.png)
 
 ## Настройка
 Пояснения к файлу настройки приложения: settings.json:
