@@ -91,6 +91,7 @@ class NodesAPI(object):
         return self.nodelist[0].child_list
 
     def nmap_nets(self, nets):
+        print(nets)
         pipe = os.popen("nmap -n %s -sP -oX -" % " ".join(nets))
         out = pipe.read()
         ecode = pipe.close()
@@ -110,8 +111,8 @@ class NodesAPI(object):
 
         nets = []
         for cat in catid:
-            net = settings['categories'][int(cat)][1]
-            nets.extend(net)
+            for net in settings['categories'][int(cat)][1]:
+                nets.append(net[0])
         return self.nmap_nets(nets)
 
     def check_nodes(self, catid):
