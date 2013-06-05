@@ -1,5 +1,23 @@
 {% extends "main.html" %}
 {% block nodes %}
+<table>
+	<tr>
+		<td>
+			Фильтр по имени:
+		</td>
+		<td>
+			Фильтр по MAC
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<input class="srch" name="srch" type="text">
+		</td>
+		<td>
+			<input class="srch2" name="srch2" type="text">
+		</td>
+	</tr>
+</table>
 <div class="ipgroup" id="0">
 	<ul style="margin-left:0px;">
 {% for node in nodes recursive %}

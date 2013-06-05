@@ -194,6 +194,10 @@ def reset_flags():
     sw_api.reset_flags(get_cat())
     return redirect("/")
 
+@app.route("/settings/")
+@login_required
+def settings_menu():
+    return render_template("settings.html", settings=settings, cats=enumerate(settings['categories']))
 
 @app.route("/ajax/editnode/<int:id>/", methods=["GET", "POST"])
 @logged_in_or_404
