@@ -1,0 +1,23 @@
+{% extends "main.html" %}
+{% block nodes %}
+<label>Ключ</label><input type="text" name="secret"><br>
+Ползьзователи:<br>
+{% for user in settings['users'] %}
+{{ user }}<br>
+{% endfor %}
+База данных:<br>
+<input type="text" name="engine" value="{{ settings['db']['engine'] }}"><br>
+<input type="text" name="db" value="{{ settings['db']['db'] }}"><br>
+<input type="text" name="user" value="{{ settings['db']['user'] }}"><br>
+<input type="text" name="password" value="{{ settings['db']['password'] }}"><br>
+<input type="text" name="port" value="{{ settings['db']['port'] }}"><br>
+{% for cat in settings['categories'] %}
+	{{ cat[0] }}<br>
+	{% for net in cat[1] %}
+		{{ net[0] }}<br>
+	{% endfor %}
+{% endfor %}
+{% for link in settings['addlinks'].items() %}
+	<a href="{{ link[1] }}">{{ link[0] }}</a><br>
+{% endfor %}
+{% endblock %}
