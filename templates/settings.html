@@ -1,23 +1,131 @@
 {% extends "main.html" %}
 {% block nodes %}
-<label>Ключ</label><input type="text" name="secret"><br>
-Ползьзователи:<br>
-{% for user in settings['users'] %}
-{{ user }}<br>
-{% endfor %}
-База данных:<br>
-<input type="text" name="engine" value="{{ settings['db']['engine'] }}"><br>
-<input type="text" name="db" value="{{ settings['db']['db'] }}"><br>
-<input type="text" name="user" value="{{ settings['db']['user'] }}"><br>
-<input type="text" name="password" value="{{ settings['db']['password'] }}"><br>
-<input type="text" name="port" value="{{ settings['db']['port'] }}"><br>
-{% for cat in settings['categories'] %}
-	{{ cat[0] }}<br>
-	{% for net in cat[1] %}
-		{{ net[0] }}<br>
-	{% endfor %}
-{% endfor %}
-{% for link in settings['addlinks'].items() %}
-	<a href="{{ link[1] }}">{{ link[0] }}</a><br>
-{% endfor %}
+<a href="/">Назад</a>
+<table border=1 width="100%">
+	<tr>
+		<td valign="top">
+			<a href="/settings/adduser/"><img src="/static/images/add.png" title="Добавить пользователя"></a>Ползьзователи:<br>
+			<table width="100%">
+			{% for user in settings['users'] %}
+			<tr>
+				{% if act == "edituser" and id == user %}
+					<td colspan=2>
+						<form action="/settings/edituser/{{ user }}/" method="POST">
+							<label>Пароль для пользователя {{ user }}:</label><input type="text" name="password">
+							<input type="submit" value="Применить">
+						</form>
+					</td>
+				{% else %}
+					<td>
+						{{ user }}</td>
+					<td align="right">
+						<a href="/settings/edituser/{{ user }}/"><img src="/static/images/edit.png" title="Редактировать пользователя {{ user }}"></a>
+						<a href="/settings/deleteuser/{{ user }}/"><img src="/static/images/delete.png" title="Удалить пользователя {{ user }}"></a>
+					</td>
+				{% endif %}
+			</tr>
+			{% endfor %}
+			{% if act == "adduser" %}
+			<tr>
+				<td colspan=2>
+					<form action="/settings/adduser/" method="POST">
+						<label>Логин:</label><input type="text" name="login">
+						<label>Пароль:</label><input type="text" name="password">
+						<input type="submit" value="Применить">
+					</form>
+				</td>
+			</tr>
+			{% endif %}
+			</table>
+			<label>Ключ</label>
+			<form action="/settings/setsecret/" method="POST">
+				<input type="text" name="secret" value="{{ settings['secret'] }}"><br>
+				<input type="submit" value="Применить">
+			</form>
+		</td>
+		<td valign="top">
+			База данных:<br>
+			<form action="/settings/setdboptions/" method="POST">
+				<label>Тип БД</label>
+				<input type="text" name="engine" value="{{ settings['db']['engine'] }}"><br>
+				<label>Имя БД</label>
+				<input type="text" name="db" value="{{ settings['db']['db'] }}"><br>
+				<label>Логин</label>
+				<input type="text" name="user" value="{{ settings['db']['user'] }}"><br>
+				<label>Пароль</label>
+				<input type="text" name="password" value="{{ settings['db']['password'] }}"><br>
+				<label>Порт</label>
+				<input type="text" name="port" value="{{ settings['db']['port'] }}"><br>
+				<input type="submit" value="Применить">
+			</form>
+		</td>
+		<td valign="top">
+			<img src="/static/images/add.png" title="Добавить категорию">
+			Категории:<br>
+			<table width="100%">
+				<tr>
+					{% for cat in settings['categories'] %}
+					<td colspan=2>
+						<img src="/static/images/add.png" title="Добавить подсеть в категорию {{ cat[0] }}">
+						<img src="/static/images/delete.png" title="Удалить категорию {{ cat[0] }}">
+						{{ cat[0] }}
+					</td>
+				</tr>
+						{% for net in cat[1] %}
+						<tr>
+							<td>{{ net[0] }}</td>
+							<td align="right">
+								<img src="/static/images/edit.png">
+								<img src="/static/images/delete.png">
+							</td>
+						</tr>
+						{% endfor %}
+					{% endfor %}
+			</table>
+		</td>
+		<td valign="top">
+			<table width="100%">
+				<tr>
+					<td colspan=2>
+						<a href="/settings/addlink/"><img src="/static/images/add.png" title="Добавить ссылку"></a>
+						Дополнительные ссылки:
+					</td>
+				</tr>
+					{% for link in settings['addlinks'].items() %}
+					<tr>
+						{% if act == "editlink" and id == link[0] %}
+						<td>
+							<form action="" method="POST">
+								<label>Заголовок:</label>
+								<input type="text" name="name" value="{{ link[0] }}">
+								<label>Адрес:</label>
+								<input type="text" name="url" value="{{ link[1] }}"><br>
+								<input type="submit" value="Применить">
+							</form>
+						</td>
+						{% else %}
+						<td><a href="{{ link[1] }}">{{ link[0] }}</a></td>
+						<td align="right">
+							<a href="/settings/editlink/{{ link[0] }}/"><img src="/static/images/edit.png" title="Изменить ссылку"></a>
+							<a href="/settings/deletelink/{{ link[0] }}/"><img src="/static/images/delete.png" title="Удалить ссылку"></a>
+						</td>
+						{% endif %}
+					</tr>
+					{% endfor %}
+					{% if act == "addlink" %}
+					<tr>
+						<td colspan=2>
+							<form action="/settings/addlink/" method="POST">
+								<label>Заголовок:</label><input type="text" name="name">
+								<label>Адрес:</label><input type="text" name="url">
+								<input type="submit" value="Применить">
+							</form>
+						</td>
+					</tr>
+			{% endif %}
+
+			</table>
+		</td>
+	</tr>
+</table>
 {% endblock %}
