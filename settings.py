@@ -43,22 +43,27 @@ class Settings(object):
             for user in users.items():
                 self.options['users'][user[0]] = user[1]
 
-    def del_user(self, name):
+    def delete_user(self, name):
         if len(self.options['users']) > 1:
             try:
                 self.options['users'].pop(name)
             except KeyError:
                 pass
 
-    def edit_link(self, name, link):
-        self.options['users'][name] = link
+    def edit_link(self, name, link, oldname=None):
+        if oldname is not None:
+            self.options['addlinks'].pop(oldname)
+        else:
+            if name in self.options['addlinks']:
+                return
+        self.options['addlinks'][name] = link
 
     def edit_links(self, links):
         if isinstance(links, dict):
             for link in links.items():
                 self.options['addlinks'][link[0]] = link[1]
 
-    def del_link(self, name):
+    def delete_link(self, name):
         try:
             self.options['addlinks'].pop(name)
         except KeyError:
