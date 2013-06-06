@@ -69,6 +69,14 @@ class Settings(object):
         except KeyError:
             pass
 
+    def add_category(self, name):
+        self.options['categories'].append([name , [ ]])
+
+    def delete_category(self, id):
+        if len(self.options['categories']) > 1:
+            if len(self.options['categories']) <= int(id)+1:
+                self.options['categories'].pop(id)
+
     def set_secret(self, secret):
         self.options['secret'] = secret
 
