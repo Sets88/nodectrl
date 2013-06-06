@@ -19,7 +19,7 @@
 					<td>
 						{{ user }}</td>
 					<td align="right">
-						<a href="/settings/edituser/{{ user }}/"><img src="/static/images/edit.png" title="Редактировать пользователя {{ user }}"></a>
+						<a href="/settings/edituser/{{ user }}/"><img src="/static/images/edit.png" title="Изменить пароль пользователя {{ user }}"></a>
 						<a href="/settings/deleteuser/{{ user }}/"><img src="/static/images/delete.png" title="Удалить пользователя {{ user }}"></a>
 					</td>
 				{% endif %}
@@ -60,14 +60,15 @@
 			</form>
 		</td>
 		<td valign="top">
-			<img src="/static/images/add.png" title="Добавить категорию">
+			<a href="/settings/addcategory/"><img src="/static/images/add.png" title="Добавить категорию"></a>
 			Категории:<br>
 			<table width="100%">
 				<tr>
 					{% for cat in settings['categories'] %}
 					<td colspan=2>
-						<img src="/static/images/add.png" title="Добавить подсеть в категорию {{ cat[0] }}">
-						<img src="/static/images/delete.png" title="Удалить категорию {{ cat[0] }}">
+						<a href="/settings/addsubnet/"><img src="/static/images/add.png" title="Добавить подсеть в категорию {{ cat[0] }}"></a>
+						<a href="/settings/deletecategory/{{ settings['categories'].index(cat) }}/"><img src="/static/images/delete.png" title="Удалить категорию {{ cat[0] }}"></a>
+						<a href="/settings/editcategory/{{ settings['categories'].index(cat) }}/"><img src="/static/images/edit.png" title="Редактировать категорию {{ cat[0] }}"></a>
 						{{ cat[0] }}
 					</td>
 				</tr>
@@ -75,12 +76,22 @@
 						<tr>
 							<td>{{ net[0] }}</td>
 							<td align="right">
-								<img src="/static/images/edit.png">
-								<img src="/static/images/delete.png">
+								<a href="/settings/editsubnet/{{ net[0] }}/"><img src="/static/images/edit.png"></a>
+								<a href="/settings/deletesubnet/{{ net[0] }}/"><img src="/static/images/delete.png"></a>
 							</td>
 						</tr>
 						{% endfor %}
 					{% endfor %}
+					{% if act == "addcategory" %}
+						<tr>
+							<td colspan=2>
+								<form action="/settings/addcategory/" method="POST">
+									<input type="text" name="name">
+									<input type="submit" value="Применить">
+								</form>
+							</td>
+						</tr>
+					{% endif %}
 			</table>
 		</td>
 		<td valign="top">
@@ -128,4 +139,5 @@
 		</td>
 	</tr>
 </table>
+<a href="/settings/savesettings/">Сохранить</a>
 {% endblock %}
