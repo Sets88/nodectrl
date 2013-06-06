@@ -17,8 +17,14 @@ Session = sessionmaker()
 
 class NodesAPI(object):
 
+
     """Main programm API"""
     def __init__(self, settings):
+        self.db_engine = None
+        self.session = None
+        self.db_connect(settings)
+
+    def db_connect(self, settings):
         try:
             if settings['engine'] == "mysql":
                 self.db_engine = create_engine(
@@ -31,6 +37,7 @@ class NodesAPI(object):
         Session.configure(bind=self.db_engine)
         self.session = Session()
         Base.metadata.create_all(self.db_engine)
+
 
     def get_by_id(self, id):
         return self.session.query(Node).filter_by(id=id).first()
