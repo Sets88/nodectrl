@@ -42,6 +42,8 @@ class Auth(object):
         return sha512(self.secret + sha512(password + user).hexdigest() + self.secret).hexdigest()
 
     def is_logged(self):
+        if len(self.userlist) == 0:
+            return True
         try:
             if self.hash(self.userlist[request.cookies.get("user")], request.cookies.get("user")) == request.cookies.get("pass"):
                 return True
