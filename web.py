@@ -43,6 +43,9 @@ def get_cookie(name):
         return request.cookies.get(name)
 
 
+########### DECORATORS #############
+
+
 def login_required(func):
     @wraps(func)
     def wraper(*args, **kwargs):
@@ -73,6 +76,10 @@ def update_cookie(func):
             cookies.clear()
         return response
     return wraper
+
+
+############# MAIN #################
+
 
 @app.route("/login/", methods=["GET", "POST"])
 def login():
@@ -276,7 +283,39 @@ def settings_delete_link(name):
     settings.delete_link(name)
     return redirect("/settings/")
 
+@app.route("/settings/addcategory/", methods=["GET", "POST"])
+@login_required
+def settings_add_category():
+    if request.method == 'POST':
+        settings.add_category(request.form['name'])
+        return redirect("/settings/")
+    else:
+        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="addcategory")
+
+@app.route("/settings/deletecategory/<int:id>/")
+@login_required
+def settings_delete_category(id):
+    settings.delete_category(id)
+    return redirect("/settings/")
+
+@app.route("/settings/editcategory/<int:id>/", methods=["GET", "POST"])
+@login_required
+def settings_edit_category(id):
+    if request.method == 'POST':
+        #settings.edit_link(request.form['name'].replace("/", ""), request.form['url'], id)
+        return redirect("/settings/")
+    else:
+        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="editcategory", id=id)
+
+@app.route("/settings/savesettings/")
+@login_required
+def settings_save_settings():
+    settings.save()
+    return redirect("/")
+
+
 ############# AJAX ##################
+
 
 @app.route("/ajax/editnode/<int:id>/", methods=["GET", "POST"])
 @logged_in_or_404
