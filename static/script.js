@@ -71,7 +71,7 @@ $(document).ready(function(){
 	{
 		var obj = $("#ipcalc");
 		$.ajax({
-			url: 'ajax/ipcalc',
+			url: '/ajax/ipcalc',
 			dataType: "html",
 			success: function(json)
 			{
