@@ -302,10 +302,34 @@ def settings_delete_category(id):
 @login_required
 def settings_edit_category(id):
     if request.method == 'POST':
-        #settings.edit_link(request.form['name'].replace("/", ""), request.form['url'], id)
+        settings.edit_category(id, request.form['name'])
         return redirect("/settings/")
     else:
         return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="editcategory", id=id)
+
+@app.route("/settings/addsubnet/<int:catid>/", methods=["GET", "POST"])
+@login_required
+def settings_add_subnet(catid):
+    if request.method == 'POST':
+        settings.add_subnet(catid, request.form['net'], request.form['vlan'])
+        return redirect("/settings/")
+    else:
+        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="addsubnet", catid=catid)
+
+@app.route("/settings/deletesubnet/<int:catid>/<int:id>/")
+@login_required
+def settings_delete_subnet(catid, id):
+    settings.delete_subnet(catid, id)
+    return redirect("/settings/")
+
+@app.route("/settings/editsubnet/<int:catid>/<int:id>/", methods=["GET", "POST"])
+@login_required
+def settings_edit_subnet(catid,id):
+    if request.method == 'POST':
+        settings.edit_subnet(int(id), int(catid), request.form['net'], request.form['vlan'])
+        return redirect("/settings/")
+    else:
+        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="editsubnet", catid=catid, id=id)
 
 @app.route("/settings/savesettings/")
 @login_required
