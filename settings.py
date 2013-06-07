@@ -72,10 +72,27 @@ class Settings(object):
     def add_category(self, name):
         self.options['categories'].append([name , [ ]])
 
+    def edit_category(self, id, name):
+        if id < len(self.options['categories']):
+            self.options['categories'][id][0] = name
+
     def delete_category(self, id):
         if len(self.options['categories']) > 1:
             if len(self.options['categories']) <= int(id)+1:
                 self.options['categories'].pop(id)
+
+    def add_subnet(self, catid, net, vlan):
+        if len(self.options['categories']) > catid:
+            self.options['categories'][catid][1].append([net, vlan])
+
+    def edit_subnet(self, catid, id, net, vlan):
+        if len(self.options['categories']) > catid and len(self.options['categories'][catid][1]) > id:
+            self.options['categories'][catid][1][id][0] = net
+            self.options['categories'][catid][1][id][1] = vlan
+
+    def delete_subnet(self, catid, id):
+        if len(self.options['categories']) > catid and len(self.options['categories'][catid][1]) > id:
+            self.options['categories'][catid][1].pop(id)
 
     def set_secret(self, secret):
         self.options['secret'] = secret
