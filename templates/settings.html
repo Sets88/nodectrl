@@ -66,21 +66,50 @@
 				<tr>
 					{% for cat in settings['categories'] %}
 					<td colspan=2>
-						<a href="/settings/addsubnet/"><img src="/static/images/add.png" title="Добавить подсеть в категорию {{ cat[0] }}"></a>
-						<a href="/settings/deletecategory/{{ settings['categories'].index(cat) }}/"><img src="/static/images/delete.png" title="Удалить категорию {{ cat[0] }}"></a>
-						<a href="/settings/editcategory/{{ settings['categories'].index(cat) }}/"><img src="/static/images/edit.png" title="Редактировать категорию {{ cat[0] }}"></a>
-						{{ cat[0] }}
+						{% if act == "editcategory" and id == loop.index0 %}
+							<form action="" method="POST">
+								<input type="text" name="name" value="{{ cat[0] }}">
+								<input type="submit" value="Применить">
+							</form>
+						{% else %}
+							<a href="/settings/addsubnet/{{ loop.index0 }}/"><img src="/static/images/add.png" title="Добавить подсеть в категорию {{ cat[0] }}"></a>
+							<a href="/settings/deletecategory/{{ loop.index0 }}/"><img src="/static/images/delete.png" title="Удалить категорию {{ cat[0] }}"></a>
+							<a href="/settings/editcategory/{{ loop.index0 }}/"><img src="/static/images/edit.png" title="Редактировать категорию {{ cat[0] }}"></a>
+							{{ cat[0] }}
+						{% endif %}
 					</td>
-				</tr>
+				</tr>	
+						{% set outer_loop = loop %}
 						{% for net in cat[1] %}
 						<tr>
-							<td>{{ net[0] }}</td>
-							<td align="right">
-								<a href="/settings/editsubnet/{{ net[0] }}/"><img src="/static/images/edit.png"></a>
-								<a href="/settings/deletesubnet/{{ net[0] }}/"><img src="/static/images/delete.png"></a>
-							</td>
+							{% if act == "editsubnet" and catid == outer_loop.index0 and id == loop.index0 %}
+								<td colspan="2">
+									<form action="" method="POST">
+										<input type="text" name="net" value="{{ net[0] }}" >
+										<input type="text" name="vlan" value="{{ net[1] }}" >
+										<input type="submit" value="Применить" >
+									</form>
+								</td>
+							{% else %}
+								<td>{{ net[0] }}</td>
+								<td align="right">
+									<a href="/settings/editsubnet/{{ outer_loop.index0 }}/{{ loop.index0 }}/"><img src="/static/images/edit.png"></a>
+									<a href="/settings/deletesubnet/{{ outer_loop.index0 }}/{{ loop.index0 }}/"><img src="/static/images/delete.png"></a>
+								</td>
+							{% endif %}
 						</tr>
 						{% endfor %}
+						{% if act == "addsubnet" and catid == loop.index0 %}
+						<tr>
+							<td>
+								<form action="" method="POST">
+									<input type="text" name="net" value="" >
+									<input type="text" name="vlan" value="" >
+									<input type="submit" value="Применить" >
+								</form>
+							</td>
+						</tr>
+						{% endif %}
 					{% endfor %}
 					{% if act == "addcategory" %}
 						<tr>
