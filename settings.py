@@ -87,8 +87,7 @@ class Settings(object):
 
     def edit_subnet(self, catid, id, net, vlan):
         if len(self.options['categories']) > catid and len(self.options['categories'][catid][1]) > id:
-            self.options['categories'][catid][1][id][0] = net
-            self.options['categories'][catid][1][id][1] = vlan
+            self.options['categories'][catid][1][id] = (net, vlan)
 
     def delete_subnet(self, catid, id):
         if len(self.options['categories']) > catid and len(self.options['categories'][catid][1]) > id:
