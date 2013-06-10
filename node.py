@@ -144,6 +144,7 @@ class NodesAPI(object):
                 sw.comment = "???"
                 sw.status = 1
                 sw.set_ip(ip)
+                sw.catid = catid[0]
                 self.add_node(sw)
         self.save_all()
     def automove_nodes(self, catid):
