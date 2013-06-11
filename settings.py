@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import ipaddr
 
 class Settings(object):
     options = {"users":{}, 
@@ -95,6 +96,15 @@ class Settings(object):
 
     def set_secret(self, secret):
         self.options['secret'] = secret
+
+    def get_nets(self, cats=None):
+        nets = []
+        for idx,cat in enumerate(self.options['categories']):
+            if cats is None or str(idx) in cats:
+                for net in cat[1]:
+                    nets.append((ipaddr.IPNetwork(net[0]), net[1]))
+        return nets
+
 
     def set_db_options(self, db):
         if "engine" and "db" in db:
