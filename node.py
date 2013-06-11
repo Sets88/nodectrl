@@ -7,9 +7,11 @@ from sqlalchemy.orm import sessionmaker, reconstructor
 from settings import settings
 import socket
 import struct
+import ipaddr
 import os
 from xml.dom import minidom
 from flask import abort
+from nodeoperations import NodeOperations
 
 Base = declarative_base()
 Session = sessionmaker()
@@ -147,10 +149,19 @@ class NodesAPI(object):
                 sw.catid = catid[0]
                 self.add_node(sw)
         self.save_all()
-    def automove_nodes(self, catid):
-        #oid =  ".1.3.6.1.2.1.17.7.1.2.2.1.2.%s.%s" % (vlan, mac)
-        #netsnmp.snmpget(".1.3.6.1.2.1.17.7.1.2.2.1.2.1.188.246.133.61.155.111", DestHost="10.91.90.53", Version=1, Community="public")
-        pass
+    def automove_nodes(self, catid, cats):
+
+        nodes = self.session.query(Node).filter(Node.catid.in_(catid)).order_by("port").all()
+        self.nodelist = NodeList(nodes)
+        nodeop = NodeOperations(settings.get_nets(catid))
+        nodeop.nmap_nets()
+
+        for node in self.nodelist[0].child_list:
+            res = nodeop.get_port_by_parent(self.nodelist[0].child_list, node.ipaddr)
+            if res:
+                node.parent_id = res[0].id
+                node.port = res[1]
+        self.save_all()
 
     def setup(self):
         pass
