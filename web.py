@@ -186,6 +186,14 @@ def autoadd_nodes():
     sw_api.autoadd_nodes(get_cat())
     return redirect("/")
 
+
+@app.route("/automovenodes/")
+@login_required
+def automove_nodes():
+    sw_api.automove_nodes(get_cat(), settings['categories'])
+    return redirect("/")
+
+
 @app.route("/resetflag/<int:id>/")
 @login_required
 def reset_flag(id):
