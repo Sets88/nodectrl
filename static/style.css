@@ -19,7 +19,7 @@ form
     cursor: pointer;
     position: relative;
 }
-.withip:hover,.noip:hover
+.withip:hover,.noip:hover, .hlgreen:hover
 {
 	background: #bfffbf;
 	border-radius:16px;
