@@ -1,0 +1,24 @@
+{% extends "main.html" %}
+{% block nodes %}
+<table>
+	<tr>
+		<td>
+			Фильтр по IP:
+		</td>
+	</tr>
+	<tr>
+		<td>
+			<input class="ipfreesrch" type="text">
+		</td>
+	</tr>
+</table>
+<div>
+	<ul style="margin-left:0px;">
+{% for node in nodes recursive %}
+		<div class="freeip hlgreen">
+			{{ node }}
+		</div>
+{% endfor %}
+	</ul>
+</div>
+{% endblock %}
