@@ -7,7 +7,6 @@ from sqlalchemy.orm import sessionmaker, reconstructor
 from settings import settings
 import socket
 import struct
-import ipaddr
 import os
 from xml.dom import minidom
 from flask import abort
@@ -95,7 +94,7 @@ class NodesAPI(object):
 
     def list_nodes(self, catid):
         if isinstance(catid, list):
-            nodes = self.session.query(Node).filter(Node.catid.in_(catid)).order_by("port").all()
+            nodes = self.session.query(Node).filter(Node.catid.in_(catid)).order_by("port").order_by("ip").all()
         self.nodelist = NodeList(nodes)
         return self.nodelist[0].child_list
 
@@ -157,11 +156,23 @@ class NodesAPI(object):
         nodeop.nmap_nets()
 
         for node in self.nodelist[0].child_list:
-            res = nodeop.get_port_by_parent(self.nodelist[0].child_list, node.ipaddr)
+            res = nodeop.get_port_by_ip(self.nodelist[0].child_list, node.ipaddr)
             if res:
                 node.parent_id = res[0].id
                 node.port = res[1]
         self.save_all()
+
+    def get_nodename_by_mac(self, catid, mac):
+        nodes = self.session.query(Node).filter(Node.catid.in_(catid)).order_by("port").all()
+        self.nodelist = NodeList(nodes)
+        nodeop = NodeOperations(settings.get_nets(catid))
+        res = nodeop.get_port_by_mac(self.nodelist[0].child_list, mac)
+        if res:
+            for node in res[0].child_list:
+                if int(node.port) == int(res[1]):
+                    return node.comment
+            return res[0].comment
+
 
     def setup(self):
         pass
