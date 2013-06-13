@@ -19,6 +19,13 @@ class NodeOperations(object):
                     return " ".join(line.split()).split()[3]
         return None
 
+    def get_ip_by_mac(self, mac):
+        with open("/proc/net/arp", "r") as f:
+            for line in f.readlines():
+                if mac.lower() in line.lower():
+                    return " ".join(line.split()).split()[0]
+        return None
+
     def get_vlan_by_ip(self, ip):
         ip = ipaddr.IPAddress(ip)
         for net in self.nets:
@@ -54,8 +61,13 @@ class NodeOperations(object):
         return ips
 
     def _find_port(self, childs, mac, vlan):
-        if not mac or not vlan:
+
+        if mac is None:
             return None
+
+        if vlan is None:
+            vlan = 1
+
         for node in childs:
             if (node.ip) and node.comment.startswith("(v)"):
                 oid =  ".1.3.6.1.2.1.17.7.1.2.2.1.2.%s.%s" % (vlan, self.mac2dec(mac))
@@ -69,8 +81,12 @@ class NodeOperations(object):
         return None
 
 
-    def get_port_by_parent(self, childs, ip):
+    def get_port_by_ip(self, childs, ip):
         mac = self.get_mac_by_ip(ip)
         vlan = self.get_vlan_by_ip(ip)
         return self._find_port(childs, mac, vlan)
 
+    def get_port_by_mac(self, childs, mac):
+        ip = self.get_ip_by_mac(mac)
+        vlan = self.get_vlan_by_ip(ip)
+        return self._find_port(childs, mac, vlan)
