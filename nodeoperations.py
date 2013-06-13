@@ -1,8 +1,5 @@
 #-*- coding: utf-8 -*-
-import sys,os,re
-import subprocess
-import MySQLdb
-import string
+import os
 from xml.dom import minidom
 import ipaddr
 import netsnmp
