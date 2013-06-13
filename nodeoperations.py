@@ -24,6 +24,8 @@ class NodeOperations(object):
         return None
 
     def get_vlan_by_ip(self, ip):
+        if not ip:
+            return None
         ip = ipaddr.IPAddress(ip)
         for net in self.nets:
             if net[0].Contains(ip):
