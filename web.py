@@ -441,6 +441,17 @@ def ajax_reset_flag(id):
 def ajax_ipcalc():
     return render_template("ipcalc.html")
 
+@app.route("/ajax/getswitchbymac/<mac>/")
+def ajax_get_nodename_by_mac(mac):
+    resp_dict = {}
+    res = sw_api.get_nodename_by_mac(get_cat(), mac)
+    if res:
+        resp_dict['result'] = "0"
+        resp_dict['comment'] = res
+    else:
+        resp_dict['result'] = "1"
+    return jsonify(resp_dict)
+
 @app.route("/ajax/")
 @logged_in_or_404
 def ajax():
