@@ -199,9 +199,15 @@ $(document).ready(function(){
 						obj.parent().parent().addClass("noip");
 						obj.parent().parent().append( json.comment +"<span class=\"adminbut\"><a class=\"add\" href=\"addnode/" + json.id + "/\"><img src=\"static/images/add.png\"></a> <a class=\"edit\" href=\"editnode/" + json.id + "/\"><img src=\"static/images/edit.png\"></a> <a class=\"move\" href=\"movenode/" + json.id + "/\"><img src=\"static/images/move.png\"></a> <a class=\"del\" href=\"deletenode/" + json.id + "/\"><img src=\"static/images/delete.png\"></a></span>").hide().show("slow");
 						if (obj.parent().attr("id")=="addtoroot")
+						{
 							$("#0.ipgroup ul:eq(0)").append("<div class=\"ipgroup\"><div id=\"new\"></div>");
 							obj.parent().appendTo("#new");
 							$("#new").removeAttr("id");
+						}
+						else
+						{
+							obj.parent().remove();
+						}
 					}
 					else
 					{
