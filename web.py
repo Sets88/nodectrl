@@ -211,6 +211,14 @@ def reset_flags():
     sw_api.reset_flags(get_cat())
     return redirect("/")
 
+@app.route("/freeip/")
+@login_required
+def free_ip():
+    nodes = sw_api.get_free_ips(get_cat())
+    if not nodes:
+        nodes = []
+    return render_template("freeip.html", nodes=nodes, addlinks=settings['addlinks'], cats=enumerate(settings['categories']))
+
 
 ############# SETTINGS ##################
 
