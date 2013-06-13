@@ -363,7 +363,7 @@ def ajax_edit_node(id):
         sw_api.save_all()
         resp_dict['result'] = 0
         return jsonify(resp_dict)
-    resp_dict['comment'] = node.comment
+    resp_dict['comment'] = node.comment.replace('"',"&quot;")
     resp_dict['ip'] = node.ipaddr
     resp_dict['port'] = node.port
     resp_dict['id'] = node.id
