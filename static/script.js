@@ -278,7 +278,6 @@ $(document).ready(function(){
 						var foundin = $('.ipgroup:contains("'+nameofswitch.trim()+'")').delay(500).show();
 						return false;
 					}
-					else alert(json.result);
 				}
 			});
 		}
