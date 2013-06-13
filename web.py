@@ -10,6 +10,7 @@ from node import NodesAPI, Node, NodeException
 from settings import settings
 from auth import Auth
 from functools import wraps
+import re
 
 app = Flask(__name__)
 
@@ -444,12 +445,15 @@ def ajax_ipcalc():
 @app.route("/ajax/getswitchbymac/<mac>/")
 def ajax_get_nodename_by_mac(mac):
     resp_dict = {}
-    res = sw_api.get_nodename_by_mac(get_cat(), mac)
-    if res:
-        resp_dict['result'] = "0"
-        resp_dict['comment'] = res
-    else:
+    if re.match("^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$", mac) is None:
         resp_dict['result'] = "1"
+    else:
+        res = sw_api.get_nodename_by_mac(get_cat(), mac)
+        if res:
+            resp_dict['result'] = "0"
+            resp_dict['comment'] = res
+        else:
+            resp_dict['result'] = "1"
     return jsonify(resp_dict)
 
 @app.route("/ajax/")
