@@ -14,10 +14,12 @@ nodectrl
 
 ## Установка
 В Ubuntu все устанавливается очень просто:
+
     sudo apt-get -y install git python-flask python-sqlalchemy nmap libsnmp-python python-ipaddr
     git clone https://github.com/Sets88/nodectrl.git
     cd nodectrl
     python web.py
+
 
 ## Настройка
 Для настройки используйте встроенный менеджер настройки: Свич -> Настройка, где желательно сразу добавить пользователя, указать ключ(лучше всего сгенерировать, этот ключ участвует при шифровании пароля)
