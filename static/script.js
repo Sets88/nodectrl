@@ -260,6 +260,12 @@ $(document).ready(function(){
 		var foundin = $('.ipgroup:contains("'+$(this).attr("value")+'")').delay(500).show();
 		return false;
 	});
+	$(document).on('keyup',".ipfreesrch",function()
+	{
+		$('.freeip').hide().delay(500);
+		var foundin = $('.freeip:contains("'+$(this).attr("value")+'")').delay(500).show();
+		return false;
+	});
 	$(document).on('keyup',".srch2",function()
 	{
 		var nameofswitch=""
