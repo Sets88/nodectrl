@@ -24,7 +24,7 @@
 <div class="ipgroup" id="{{node.id}}">
 	{% if act == "edit" and id == node.id %}
 		<div class="withip">
-			<form class="navbar-form" method="POST" action="editnode/{{node.id}}/">
+			<form class="navbar-form" method="POST" action="/editnode/{{node.id}}/">
 				<input type="text" value="{{ node.comment }}" name="comment" id="{{ node.id }}">
 				<input type="text" value="{{ node.ipaddr }}" name="ip">
 				<input type="text" style="width:40px;" value="{{ node.port }}" name="port">
@@ -66,16 +66,16 @@
 			<span class="adminbut">
 				{% if node.flag %}
 				<a href="resetflag/{{ node.id }}/#{{ node.id }}" class="flag">
-					<img src="static/images/alert.png"></a>
+					<img src="/static/images/alert.png"></a>
 				{% endif %}
 				<a href="addnode/{{ node.id }}/#{{ node.id }}" class="add">
-					<img src="static/images/add.png"></a>
+					<img src="/static/images/add.png"></a>
 				<a href="editnode/{{ node.id }}/#{{ node.id }}" class="edit">
-					<img src="static/images/edit.png"></a>
+					<img src="/static/images/edit.png"></a>
 				<a href="movenode/{{ node.id }}/" class="move">
-					<img src="static/images/move.png"></a>
+					<img src="/static/images/move.png"></a>
 				<a href="deletenode/{{ node.id }}/" class="del" >
-					<img src="static/images/delete.png"></a>
+					<img src="/static/images/delete.png"></a>
 			</span>
 		</div>
 
