@@ -173,6 +173,18 @@ class NodesAPI(object):
                     return node.comment
             return res[0].comment
 
+    def get_free_ips(self, catid):
+        nodes = self.session.query(Node).filter(Node.catid.in_(catid)).filter(Node.ip > 0).order_by("ip").all()
+        ips = []
+        freeip = []
+        for node in nodes:
+            ips.append(str(node.ipaddr))
+        for net in settings.get_nets(catid):
+            for ip in net[0].iterhosts():
+                print ip
+                if str(ip) not in ips:
+                    freeip.append(ip)
+        return freeip
 
     def setup(self):
         pass
