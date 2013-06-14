@@ -118,7 +118,6 @@ class Settings(object):
             try:
                 self.options['db']['user'] = db['user']
                 self.options['db']['password'] = db['password']
-                self.options['db']['port'] = db['port']
                 self.options['db']['host'] = db['host']
                 if not db['port']:
                     self.options['db']['port'] = "3306"
