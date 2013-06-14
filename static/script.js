@@ -120,8 +120,7 @@ $(document).ready(function(){
 			{
 				if (json.result=="0")
 				{
-					templ("aa")
-					//obj.remove();
+					obj.remove();
 				}
 			}
 		});
