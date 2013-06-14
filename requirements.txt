@@ -1,3 +1,6 @@
 Flask >= 0.9
 Jinja2 >= 2.6
 SQLAlchemy >= 0.7.8
+ipaddr >= 2.1.10
+libnetsnmp-python
+nmap
