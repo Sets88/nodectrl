@@ -53,6 +53,8 @@
 			<form action="/settings/setdboptions/" method="POST">
 				<label>Тип БД</label>
 				<input type="text" name="engine" value="{{ settings['db']['engine'] }}"><br>
+				<label>Имя узла</label>
+				<input type="text" name="host" value="{{ settings['db']['host'] }}"><br>
 				<label>Имя БД</label>
 				<input type="text" name="db" value="{{ settings['db']['db'] }}"><br>
 				<label>Логин</label>
