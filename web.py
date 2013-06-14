@@ -481,7 +481,7 @@ def ajax_set_flag(ip, status, hashh):
         if node:
             node.flag = status
             sw_api.save_all()
-            resp_dict['result'] = "0"
+            resp_dicty['result'] = "0"
         else:
             resp_dict['result'] = "1"
         return jsonify(resp_dict)
