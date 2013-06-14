@@ -68,13 +68,11 @@ class NodeOperations(object):
             vlan = 1
 
         for node in childs:
-            if port == 0 or (int(port)>0 and node.port == port):
+            if port == 0 or (int(port)>0 and int(node.port) == int(port)):
                 if (node.ip) and node.comment.startswith("(v)"):
-                    if ipaddr is not None and node.ipaddr == ipaddr:
-                        return None
                     oid =  ".1.3.6.1.2.1.17.7.1.2.2.1.2.%s.%s" % (vlan, self.mac2dec(mac))
                     res = netsnmp.snmpget(oid, DestHost=node.ipaddr, Version=1, Community="public")
-                    if res[0]:
+                    if res[0] and int(res[0])>0:
                         recres=self._find_port(node.child_list, mac, vlan, ipaddr=ipaddr, port=res[0])
                         if recres and int(recres[1])>0:
                             return recres
