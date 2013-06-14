@@ -12,7 +12,7 @@ class Settings(object):
                "db": {
                         "engine": "sqlite",
                         "db": os.path.join(root_path, "nodes.db"),
-                        "host": "host",
+                        "host": "localhost",
                         "user": "",
                         "password": "",
                         "port": ""
