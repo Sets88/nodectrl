@@ -46,6 +46,13 @@ class NodesAPI(object):
     def get_by_parent(self, id):
         return self.session.query(Node).filter_by(parent_id=id).all()
 
+    def get_by_ip(self, ipaddr):
+        try:
+            ip = struct.unpack("!I",socket.inet_aton(ipaddr))[0]
+        except:
+            return None
+        return self.session.query(Node).filter_by(ip=ip).first()
+
     def delete_node(self, id):
         return self.session.query(Node).filter_by(id=id).delete()
         
