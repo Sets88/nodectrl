@@ -232,7 +232,9 @@ def settings_menu():
 @login_required
 def settings_set_secret():
     if request.method == 'POST':
-        settings.set_secret(request.form['secret'])
+        settings.set_secret(str(request.form['secret']))
+        app.secret_key = str(request.form['secret'])
+        auth.secret = str(request.form['secret'])
         return redirect("/settings/")
     else:
         abort(404)
@@ -349,6 +351,13 @@ def settings_edit_subnet(catid,id):
     else:
         return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="editsubnet", catid=catid, id=id)
 
+@app.route("/settings/generatehash/", methods=["POST"])
+@login_required
+def settings_generate_hash():
+    if request.method == 'POST':
+        hashh = auth.get_ip_hash(request.form['text'])
+        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), hashh=hashh)
+
 @app.route("/settings/savesettings/")
 @login_required
 def settings_save_settings():
@@ -463,6 +472,15 @@ def ajax_get_nodename_by_mac(mac):
         else:
             resp_dict['result'] = "1"
     return jsonify(resp_dict)
+
+@app.route("/ajax/setflag/<int:id>/<int:status>/<hashh>/")
+def ajax_set_flag(id, status, hashh):
+    if auth.check_ip_hash(hashh, request.remote_addr):
+        node = sw_api.get_by_id(id)
+        node.flag = status
+        sw_api.save_all()
+        return redirect("/")
+    abort(404)
 
 @app.route("/ajax/")
 @logged_in_or_404
