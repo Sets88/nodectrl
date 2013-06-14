@@ -248,6 +248,7 @@ def settings_set_db_options():
         db_opt['db'] = request.form['db']
         db_opt['user'] = request.form['user']
         db_opt['password'] = request.form['password']
+        db_opt['host'] = request.form['host']
         db_opt['port'] = request.form['port']
         settings.set_db_options(db_opt)
         sw_api.db_connect(settings['db'])
@@ -481,7 +482,7 @@ def ajax_set_flag(ip, status, hashh):
         if node:
             node.flag = status
             sw_api.save_all()
-            resp_dicty['result'] = "0"
+            resp_dict['result'] = "0"
         else:
             resp_dict['result'] = "1"
         return jsonify(resp_dict)
