@@ -474,8 +474,20 @@ def ajax_get_nodename_by_mac(mac):
             resp_dict['result'] = "1"
     return jsonify(resp_dict)
 
-@app.route("/ajax/setflag/<ip>/<int:status>/<hashh>/")
-def ajax_set_flag(ip, status, hashh):
+@app.route("/ajax/")
+@logged_in_or_404
+def ajax():
+    nodes = sw_api.scan_nodes(0)
+    sw_api.close_session()
+    if nodes:
+        return "</br>".join(nodes)
+    else:
+        abort(404)
+
+############# API ##################
+
+@app.route("/api/setflag/<ip>/<int:status>/<hashh>/")
+def api_set_flag(ip, status, hashh):
     resp_dict = {}
     if auth.check_ip_hash(hashh, request.remote_addr):
         node = sw_api.get_by_ip(ip)
@@ -488,16 +500,21 @@ def ajax_set_flag(ip, status, hashh):
         return jsonify(resp_dict)
     abort(404)
 
-@app.route("/ajax/")
-@logged_in_or_404
-def ajax():
-    nodes = sw_api.scan_nodes(0)
-    sw_api.close_session()
-    if nodes:
-        return "</br>".join(nodes)
-    else:
-        abort(404)
-
+@app.route("/api/getnodebymac/<mac>/<hashh>/")
+def api_get_nodename_by_mac(mac, hashh):
+    if auth.check_ip_hash(hashh, request.remote_addr):
+        resp_dict = {}
+        if re.match("^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$", mac) is None:
+            resp_dict['result'] = "1"
+        else:
+            res = sw_api.get_nodename_by_mac(get_cat(), mac)
+            if res:
+                resp_dict['result'] = "0"
+                resp_dict['comment'] = res
+            else:
+                resp_dict['result'] = "1"
+        return jsonify(resp_dict)
+    abort(404)
 
 if __name__ == "__main__":
     app.run()
