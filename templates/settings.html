@@ -42,6 +42,11 @@
 				<input type="text" name="secret" value="{{ settings['secret'] }}"><br>
 				<input type="submit" value="Применить">
 			</form>
+			Сгенерировать хэш на основе ключа:
+			<form action="/settings/generatehash/" method="POST">
+				<input type="text" name="text" value="{{ hashh }}"><br>
+				<input type="submit" value="Сгенерировать">
+			</form>
 		</td>
 		<td valign="top">
 			База данных:<br>
