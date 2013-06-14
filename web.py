@@ -33,7 +33,7 @@ def get_cat():
             if settings['categories'][int(cat)]:
                 pass
     except (IndexError, ValueError):
-        return [0]
+        return ["0"]
     else:
         return cats
 
