@@ -29,7 +29,7 @@ class NodesAPI(object):
         try:
             if settings['engine'] == "mysql":
                 self.db_engine = create_engine(
-                    "mysql://%s:%s@%s/%s?init_command=set names utf8" % (settings['user'], settings['password'], settings['host'], settings['db'])
+                    "mysql://%s:%s@%s:%s/%s?init_command=set names utf8" % (settings['user'], settings['password'], settings['host'], settings['port'], settings['db'])
                     , echo=True, convert_unicode=True)
             elif settings['engine'] == "sqlite":
                 self.db_engine = create_engine("sqlite:///%s" % settings['db'])
