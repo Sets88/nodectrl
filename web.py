@@ -506,6 +506,7 @@ def api_get_nodename_by_mac(mac, hashh):
         resp_dict = {}
         if re.match("^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$", mac) is None:
             resp_dict['result'] = "1"
+            resp_dict['error'] = "wrong mac format"
         else:
             res = sw_api.get_nodename_by_mac(get_cat(), mac)
             if res:
@@ -513,6 +514,7 @@ def api_get_nodename_by_mac(mac, hashh):
                 resp_dict['comment'] = res
             else:
                 resp_dict['result'] = "1"
+                resp_dict['error'] = "unknown error"
         return jsonify(resp_dict)
     abort(404)
 
