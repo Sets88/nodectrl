@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 import json
 import ipaddr
+import os
 
 class Settings(object):
+
+    root_path = os.path.dirname(os.path.realpath(__file__))
+
     options = {"users":{}, 
                "secret":"",
                "db": {
                         "engine": "sqlite",
-                        "db": "nodes.db",
+                        "db": os.path.join(root_path, "nodes.db"),
+                        "host": "host",
                         "user": "",
                         "password": "",
                         "port": ""
@@ -20,7 +25,7 @@ class Settings(object):
 
     def __init__(self):
         try:
-            f = open("settings.json", "r")
+            f = open(os.path.join(self.root_path, "settings.json"), "r")
         except IOError:
             self.load()
         else:
@@ -114,6 +119,11 @@ class Settings(object):
                 self.options['db']['user'] = db['user']
                 self.options['db']['password'] = db['password']
                 self.options['db']['port'] = db['port']
+                self.options['db']['host'] = db['host']
+                if not db['port']:
+                    self.options['db']['port'] = "3306"
+                else:
+                    self.options['db']['port'] = db['port']
             except KeyError:
                 pass
 
@@ -136,7 +146,7 @@ class Settings(object):
                 self.set_categories(data['categories'])
 
     def save(self):
-        f = open("settings.json", "w")
+        f = open(os.path.join(self.root_path, "settings.json"), "w")
         json.dump(self.options, f, indent=4)
 
 settings = Settings()
