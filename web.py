@@ -473,13 +473,18 @@ def ajax_get_nodename_by_mac(mac):
             resp_dict['result'] = "1"
     return jsonify(resp_dict)
 
-@app.route("/ajax/setflag/<int:id>/<int:status>/<hashh>/")
-def ajax_set_flag(id, status, hashh):
+@app.route("/ajax/setflag/<ip>/<int:status>/<hashh>/")
+def ajax_set_flag(ip, status, hashh):
+    resp_dict = {}
     if auth.check_ip_hash(hashh, request.remote_addr):
-        node = sw_api.get_by_id(id)
-        node.flag = status
-        sw_api.save_all()
-        return redirect("/")
+        node = sw_api.get_by_ip(ip)
+        if node:
+            node.flag = status
+            sw_api.save_all()
+            resp_dict['result'] = "0"
+        else:
+            resp_dict['result'] = "1"
+        return jsonify(resp_dict)
     abort(404)
 
 @app.route("/ajax/")
