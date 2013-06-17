@@ -3,25 +3,26 @@ import json
 import ipaddr
 import os
 
+
 class Settings(object):
 
     root_path = os.path.dirname(os.path.realpath(__file__))
 
-    options = {"users":{}, 
-               "secret":"",
+    options = {"users": {},
+               "secret": "",
                "db": {
-                        "engine": "sqlite",
-                        "db": os.path.join(root_path, "nodes.db"),
-                        "host": "localhost",
-                        "user": "",
-                        "password": "",
-                        "port": ""
-                },
-                "categories": [
-                        ["Default" , [("192.168.1.0/24", "1")]]
-                    ],
-                "addlinks": {}
-    }
+                   "engine": "sqlite",
+                   "db": os.path.join(root_path, "nodes.db"),
+                   "host": "localhost",
+                   "user": "",
+                   "password": "",
+                   "port": ""
+               },
+               "categories": [
+                   ["Default", [("192.168.1.0/24", "1")]]
+               ],
+               "addlinks": {}
+               }
 
     def __init__(self):
         try:
@@ -30,7 +31,6 @@ class Settings(object):
             self.load()
         else:
             self.load(json.load(f))
-
 
     def __getitem__(self, key):
         try:
@@ -76,7 +76,7 @@ class Settings(object):
             pass
 
     def add_category(self, name):
-        self.options['categories'].append([name , [ ]])
+        self.options['categories'].append([name, []])
 
     def edit_category(self, id, name):
         if id < len(self.options['categories']):
@@ -84,7 +84,7 @@ class Settings(object):
 
     def delete_category(self, id):
         if len(self.options['categories']) > 1:
-            if len(self.options['categories']) <= int(id)+1:
+            if len(self.options['categories']) <= int(id) + 1:
                 self.options['categories'].pop(id)
 
     def add_subnet(self, catid, net, vlan):
@@ -104,12 +104,11 @@ class Settings(object):
 
     def get_nets(self, cats=None):
         nets = []
-        for idx,cat in enumerate(self.options['categories']):
+        for idx, cat in enumerate(self.options['categories']):
             if cats is None or str(idx) in cats:
                 for net in cat[1]:
                     nets.append((ipaddr.IPNetwork(net[0]), net[1]))
         return nets
-
 
     def set_db_options(self, db):
         if "engine" and "db" in db:

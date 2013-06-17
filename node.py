@@ -7,9 +7,6 @@ from sqlalchemy.orm import sessionmaker, reconstructor
 from settings import settings
 import socket
 import struct
-import os
-from xml.dom import minidom
-from flask import abort
 from nodeoperations import NodeOperations
 from sqlalchemy.exc import OperationalError
 
@@ -18,7 +15,6 @@ Session = sessionmaker()
 
 
 class NodesAPI(object):
-
 
     """Main programm API"""
     def __init__(self, settings):
@@ -29,8 +25,8 @@ class NodesAPI(object):
     def db_connect(self, settings):
         if settings['engine'] == "mysql":
             self.db_engine = create_engine(
-                "mysql://%s:%s@%s:%s/%s?init_command=set names utf8" % (settings['user'], settings['password'], settings['host'], settings['port'], settings['db'])
-                , echo=True, convert_unicode=True)
+                "mysql://%s:%s@%s:%s/%s?init_command=set names utf8" % (settings[
+                                                                        'user'], settings['password'], settings['host'], settings['port'], settings['db']), echo=True, convert_unicode=True)
         elif settings['engine'] == "sqlite":
             self.db_engine = create_engine("sqlite:///%s" % settings['db'])
 
@@ -49,14 +45,14 @@ class NodesAPI(object):
 
     def get_by_ip(self, ipaddr):
         try:
-            ip = struct.unpack("!I",socket.inet_aton(ipaddr))[0]
+            ip = struct.unpack("!I", socket.inet_aton(ipaddr))[0]
         except:
             return None
         return self.session.query(Node).filter_by(ip=ip).first()
 
     def delete_node(self, id):
         return self.session.query(Node).filter_by(id=id).delete()
-        
+
     def save_all(self):
         try:
             self.session.flush()
@@ -80,7 +76,7 @@ class NodesAPI(object):
         node = self.session.query(Node).filter_by(id=id).first()
         parent = self.session.query(Node).filter_by(id=parent_id).first()
         if node is not None:
-            if parent_id is None or parent_id=="0":
+            if parent_id is None or parent_id == "0":
                 node.parent_id = None
             elif parent is not None and id != parent_id:
                 node.parent_id = parent_id
@@ -92,11 +88,12 @@ class NodesAPI(object):
     def reset_flags(self, catid, id=None):
         """Flush flags or flag which indicates that node were off"""
         if id is None:
-            nodes = self.session.query(Node).filter(Node.catid.in_(catid)).all()
+            nodes = self.session.query(Node).filter(
+                Node.catid.in_(catid)).all()
             for node in nodes:
                 node.flag = 0
         else:
-            node = self.session.query(Node).filter(Node.id==id).first()
+            node = self.session.query(Node).filter(Node.id == id).first()
             if node is not None:
                 node.flag = 0
             else:
@@ -106,7 +103,8 @@ class NodesAPI(object):
 
     def list_nodes(self, catid):
         if isinstance(catid, list):
-            nodes = self.session.query(Node).filter(Node.catid.in_(catid)).order_by("port").order_by("ip").all()
+            nodes = self.session.query(Node).filter(Node.catid.in_(
+                catid)).order_by("port").order_by("ip").all()
         self.nodelist = NodeList(nodes)
         return self.nodelist[0].child_list
 
@@ -115,7 +113,8 @@ class NodesAPI(object):
         return nodeop.nmap_nets()
 
     def check_nodes(self, catid):
-        nodes = self.session.query(Node).filter(Node.catid.in_(catid)).filter(Node.ip > 0).all()
+        nodes = self.session.query(Node).filter(
+            Node.catid.in_(catid)).filter(Node.ip > 0).all()
         alive = self.scan_nodes(catid)
         for node in nodes:
             if node.ipaddr in alive:
@@ -125,7 +124,8 @@ class NodesAPI(object):
         self.save_all()
 
     def autoadd_nodes(self, catid):
-        nodes = self.session.query(Node).filter(Node.catid.in_(catid)).filter(Node.ip > 0).all()
+        nodes = self.session.query(Node).filter(
+            Node.catid.in_(catid)).filter(Node.ip > 0).all()
         alive = self.scan_nodes(catid)
         ips = []
         for node in nodes:
@@ -139,22 +139,26 @@ class NodesAPI(object):
                 sw.catid = catid[0]
                 self.add_node(sw)
         self.save_all()
+
     def automove_nodes(self, catid, cats):
 
-        nodes = self.session.query(Node).filter(Node.catid.in_(catid)).order_by("port").all()
+        nodes = self.session.query(Node).filter(
+            Node.catid.in_(catid)).order_by("port").all()
         self.nodelist = NodeList(nodes)
         nodeop = NodeOperations(settings.get_nets(catid))
         nodeop.nmap_nets()
 
         for node in self.nodelist[0].child_list:
-            res = nodeop.get_port_by_ip(self.nodelist[0].child_list, node.ipaddr)
+            res = nodeop.get_port_by_ip(
+                self.nodelist[0].child_list, node.ipaddr)
             if res:
                 node.parent_id = res[0].id
                 node.port = res[1]
         self.save_all()
 
     def get_nodename_by_mac(self, catid, mac):
-        nodes = self.session.query(Node).filter(Node.catid.in_(catid)).order_by("port").all()
+        nodes = self.session.query(Node).filter(
+            Node.catid.in_(catid)).order_by("port").all()
         self.nodelist
         self.nodelist = NodeList(nodes)
         nodeop = NodeOperations(settings.get_nets(catid))
@@ -166,7 +170,8 @@ class NodesAPI(object):
             return res[0].comment
 
     def get_free_ips(self, catid):
-        nodes = self.session.query(Node).filter(Node.catid.in_(catid)).filter(Node.ip > 0).order_by("ip").all()
+        nodes = self.session.query(Node).filter(Node.catid.in_(
+            catid)).filter(Node.ip > 0).order_by("ip").all()
         ips = []
         freeip = []
         for node in nodes:
@@ -207,7 +212,7 @@ class Node(Base):
 
     def set_ip(self, ipaddr):
         try:
-            ip = struct.unpack("!I",socket.inet_aton(ipaddr))[0]
+            ip = struct.unpack("!I", socket.inet_aton(ipaddr))[0]
             self.ip = ip
             self.ipaddr = ipaddr
         except:
@@ -238,11 +243,13 @@ class NodeList(object):
             else:
                 if node not in self.nodes[0].child_list:
                     self.nodes[0].child_list.append(node)
+
     def __getitem__(self, key):
         return self.nodes[key]
 
     def __iter__(self):
         return iter(self.nodes.values())
+
 
 class NodeException(Exception):
     pass

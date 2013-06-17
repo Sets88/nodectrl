@@ -1,4 +1,5 @@
-import sys, os
+import sys
+import os
 import logging
 
 logging.basicConfig(stream=sys.stderr)
