@@ -81,7 +81,7 @@ class NodesAPI(object):
         parent = self.session.query(Node).filter_by(id=parent_id).first()
         if node is not None:
             if parent_id is None or parent_id=="0":
-                node.parent_id = 0
+                node.parent_id = None
             elif parent is not None and id != parent_id:
                 node.parent_id = parent_id
             elif parent is None:
