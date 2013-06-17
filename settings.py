@@ -21,7 +21,8 @@ class Settings(object):
                "categories": [
                    ["Default", [("192.168.1.0/24", "1")]]
                ],
-               "addlinks": {}
+               "addlinks": {},
+               "permissions": {}
                }
 
     def __init__(self):
