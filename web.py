@@ -44,6 +44,9 @@ def get_cookie(name):
     else:
         return request.cookies.get(name)
 
+@app.teardown_request
+def shutdown_session(exception=None):
+    sw_api.close_session()
 
 ########### DECORATORS #############
 
