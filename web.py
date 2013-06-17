@@ -44,11 +44,12 @@ def get_cookie(name):
     else:
         return request.cookies.get(name)
 
+
 @app.teardown_request
 def shutdown_session(exception=None):
     sw_api.close_session()
 
-########### DECORATORS #############
+# DECORATORS #############
 
 
 def login_required(func):
@@ -60,6 +61,7 @@ def login_required(func):
             return redirect("/login/")
     return wraper
 
+
 def logged_in_or_404(func):
     @wraps(func)
     def wraper(*args, **kwargs):
@@ -67,7 +69,8 @@ def logged_in_or_404(func):
             return func(*args, **kwargs)
         else:
             return abort(404)
-    return wraper    
+    return wraper
+
 
 def update_cookie(func):
     """Checks if cookie change needed on response"""
@@ -83,12 +86,13 @@ def update_cookie(func):
     return wraper
 
 
-############# MAIN #################
+# MAIN #################
 
 
 @app.route("/login/", methods=["GET", "POST"])
 def login():
     return auth.do_login_window()
+
 
 @app.route("/logout/")
 @logged_in_or_404
@@ -104,6 +108,7 @@ def nodes():
     nodes = sw_api.list_nodes(get_cat())
     sw_api.close_session()
     return render_template("nodes.html", nodes=nodes, addlinks=settings['addlinks'], cats=enumerate(settings['categories']))
+
 
 @app.route("/editnode/<int:id>/", methods=["GET", "POST"])
 @login_required
@@ -208,11 +213,13 @@ def reset_flag(id):
         abort(404)
     return redirect("/")
 
+
 @app.route("/resetflags/")
 @login_required
 def reset_flags():
     sw_api.reset_flags(get_cat())
     return redirect("/")
+
 
 @app.route("/freeip/")
 @login_required
@@ -223,13 +230,14 @@ def free_ip():
     return render_template("freeip.html", nodes=nodes, addlinks=settings['addlinks'], cats=enumerate(settings['categories']))
 
 
-############# SETTINGS ##################
+# SETTINGS ##################
 
 
 @app.route("/settings/")
 @login_required
 def settings_menu():
     return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']))
+
 
 @app.route("/settings/setsecret/", methods=["GET", "POST"])
 @login_required
@@ -241,6 +249,7 @@ def settings_set_secret():
         return redirect("/settings/")
     else:
         abort(404)
+
 
 @app.route("/settings/setdboptions/", methods=["GET", "POST"])
 @login_required
@@ -260,6 +269,7 @@ def settings_set_db_options():
     else:
         abort(404)
 
+
 @app.route("/settings/edituser/<name>/", methods=["GET", "POST"])
 @login_required
 def settings_edit_user(name):
@@ -268,6 +278,7 @@ def settings_edit_user(name):
         return redirect("/settings/")
     else:
         return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="edituser", id=name)
+
 
 @app.route("/settings/adduser/", methods=["GET", "POST"])
 @login_required
@@ -278,20 +289,24 @@ def settings_add_user():
     else:
         return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="adduser")
 
+
 @app.route("/settings/deleteuser/<name>/")
 @login_required
 def settings_delete_user(name):
     settings.delete_user(name)
     return redirect("/settings/")
 
+
 @app.route("/settings/editlink/<name>/", methods=["GET", "POST"])
 @login_required
 def settings_edit_link(name):
     if request.method == 'POST':
-        settings.edit_link(request.form['name'].replace("/", ""), request.form['url'], name)
+        settings.edit_link(request.form['name'].replace(
+            "/", ""), request.form['url'], name)
         return redirect("/settings/")
     else:
         return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="editlink", id=name)
+
 
 @app.route("/settings/addlink/", methods=["GET", "POST"])
 @login_required
@@ -302,11 +317,13 @@ def settings_add_link():
     else:
         return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="addlink")
 
+
 @app.route("/settings/deletelink/<name>/")
 @login_required
 def settings_delete_link(name):
     settings.delete_link(name)
     return redirect("/settings/")
+
 
 @app.route("/settings/addcategory/", methods=["GET", "POST"])
 @login_required
@@ -317,11 +334,13 @@ def settings_add_category():
     else:
         return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="addcategory")
 
+
 @app.route("/settings/deletecategory/<int:id>/")
 @login_required
 def settings_delete_category(id):
     settings.delete_category(id)
     return redirect("/settings/")
+
 
 @app.route("/settings/editcategory/<int:id>/", methods=["GET", "POST"])
 @login_required
@@ -332,6 +351,7 @@ def settings_edit_category(id):
     else:
         return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="editcategory", id=id)
 
+
 @app.route("/settings/addsubnet/<int:catid>/", methods=["GET", "POST"])
 @login_required
 def settings_add_subnet(catid):
@@ -341,20 +361,24 @@ def settings_add_subnet(catid):
     else:
         return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="addsubnet", catid=catid)
 
+
 @app.route("/settings/deletesubnet/<int:catid>/<int:id>/")
 @login_required
 def settings_delete_subnet(catid, id):
     settings.delete_subnet(catid, id)
     return redirect("/settings/")
 
+
 @app.route("/settings/editsubnet/<int:catid>/<int:id>/", methods=["GET", "POST"])
 @login_required
-def settings_edit_subnet(catid,id):
+def settings_edit_subnet(catid, id):
     if request.method == 'POST':
-        settings.edit_subnet(int(id), int(catid), request.form['net'], request.form['vlan'])
+        settings.edit_subnet(int(id), int(
+            catid), request.form['net'], request.form['vlan'])
         return redirect("/settings/")
     else:
         return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="editsubnet", catid=catid, id=id)
+
 
 @app.route("/settings/generatehash/", methods=["POST"])
 @login_required
@@ -363,6 +387,7 @@ def settings_generate_hash():
         hashh = auth.get_ip_hash(request.form['text'])
         return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), hashh=hashh)
 
+
 @app.route("/settings/savesettings/")
 @login_required
 def settings_save_settings():
@@ -370,7 +395,7 @@ def settings_save_settings():
     return redirect("/")
 
 
-############# AJAX ##################
+# AJAX ##################
 
 
 @app.route("/ajax/editnode/<int:id>/", methods=["GET", "POST"])
@@ -385,13 +410,14 @@ def ajax_edit_node(id):
         sw_api.save_all()
         resp_dict['result'] = 0
         return jsonify(resp_dict)
-    resp_dict['comment'] = node.comment.replace('"',"&quot;")
+    resp_dict['comment'] = node.comment.replace('"', "&quot;")
     resp_dict['ip'] = node.ipaddr
     resp_dict['port'] = node.port
     resp_dict['id'] = node.id
     resp_dict['result'] = 0
     sw_api.close_session()
     return jsonify(resp_dict)
+
 
 @app.route("/ajax/addnode/<int:id>/", methods=["POST"])
 @logged_in_or_404
@@ -415,6 +441,7 @@ def ajax_add_node(id):
 
         return jsonify(resp_dict)
 
+
 @app.route("/ajax/movenode/<int:id>/", methods=["GET", "POST"])
 @logged_in_or_404
 def ajax_move_node(id):
@@ -424,7 +451,7 @@ def ajax_move_node(id):
             sw_api.move_node(id, request.form['parent'])
         except NodeException:
             abort(404)
-        
+
         resp_dict['id'] = id
         resp_dict['parent'] = request.form['parent']
         resp_dict['result'] = 0
@@ -460,9 +487,11 @@ def ajax_reset_flag(id):
         resp_dict['result'] = "1"
     return jsonify(resp_dict)
 
+
 @app.route("/ajax/ipcalc/")
 def ajax_ipcalc():
     return render_template("ipcalc.html")
+
 
 @app.route("/ajax/getswitchbymac/<mac>/")
 def ajax_get_nodename_by_mac(mac):
@@ -478,6 +507,7 @@ def ajax_get_nodename_by_mac(mac):
             resp_dict['result'] = "1"
     return jsonify(resp_dict)
 
+
 @app.route("/ajax/")
 @logged_in_or_404
 def ajax():
@@ -488,7 +518,8 @@ def ajax():
     else:
         abort(404)
 
-############# API ##################
+# API ##################
+
 
 @app.route("/api/setflag/<ip>/<int:status>/<hashh>/")
 def api_set_flag(ip, status, hashh):
@@ -503,6 +534,7 @@ def api_set_flag(ip, status, hashh):
             resp_dict['result'] = "1"
         return jsonify(resp_dict)
     abort(404)
+
 
 @app.route("/api/getnodebymac/<mac>/<hashh>/")
 def api_get_nodename_by_mac(mac, hashh):
