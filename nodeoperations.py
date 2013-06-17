@@ -44,7 +44,7 @@ class NodeOperations(object):
         nets = []
         for net in self.nets:
             nets.append(str(net[0]))
-        pipe = os.popen("nmap -n %s -sP -oX -" % " ".join(nets))
+        pipe = os.popen("nmap -n --min-rtt-timeout=200ms -sP -oX - %s" % " ".join(nets))
         out = pipe.read()
         ecode = pipe.close()
         if ecode:
@@ -57,6 +57,7 @@ class NodeOperations(object):
             status = host.getElementsByTagName("status")[0].getAttribute("state")
             if status == "up":
                 ips.append(address)
+        print ips
         return ips
 
     def _find_port(self, childs, mac, vlan, ipaddr=None, port=0):
