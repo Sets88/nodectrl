@@ -110,30 +110,9 @@ class NodesAPI(object):
         self.nodelist = NodeList(nodes)
         return self.nodelist[0].child_list
 
-    def nmap_nets(self, nets):
-        print(nets)
-        pipe = os.popen("nmap -n %s -sP -oX -" % " ".join(nets))
-        out = pipe.read()
-        ecode = pipe.close()
-        if ecode:
-            return False
-        xml = minidom.parseString(out)
-        hosts = xml.getElementsByTagName("host")
-        ips = []
-        for host in hosts:
-            address = host.getElementsByTagName("address")[0].getAttribute("addr")
-            status = host.getElementsByTagName("status")[0].getAttribute("state")
-            if status == "up":
-                ips.append(address)
-        return ips
-
     def scan_nodes(self, catid):
-
-        nets = []
-        for cat in catid:
-            for net in settings['categories'][int(cat)][1]:
-                nets.append(net[0])
-        return self.nmap_nets(nets)
+        nodeop = NodeOperations(settings.get_nets(catid))
+        return nodeop.nmap_nets()
 
     def check_nodes(self, catid):
         nodes = self.session.query(Node).filter(Node.catid.in_(catid)).filter(Node.ip > 0).all()
