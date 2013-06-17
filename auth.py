@@ -10,7 +10,7 @@ class Auth(object):
     def __init__(self, users, secret):
         self.userlist = users
         self.secret = secret
-        self.me = ""
+        self.me = None
 
     def do_login_window(self):
         if (request.method == "POST"):
