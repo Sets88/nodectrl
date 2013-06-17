@@ -4,7 +4,9 @@ from flask import request, redirect
 from flask import flash, url_for
 from hashlib import sha512, sha1
 
+
 class Auth(object):
+
     def __init__(self, users, secret):
         self.userlist = users
         self.secret = secret
@@ -26,7 +28,8 @@ class Auth(object):
             except:
                 time = 24 * 60 * 60
             response.set_cookie("user", request.form['login'], time)
-            response.set_cookie("pass", self.hash(request.form['pass'], request.form["login"]), time)
+            response.set_cookie("pass", self.hash(request.form[
+                                'pass'], request.form["login"]), time)
             return response
 
         else:
