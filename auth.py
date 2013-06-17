@@ -10,6 +10,7 @@ class Auth(object):
     def __init__(self, users, secret):
         self.userlist = users
         self.secret = secret
+        self.me = ""
 
     def do_login_window(self):
         if (request.method == "POST"):
@@ -30,6 +31,7 @@ class Auth(object):
             response.set_cookie("user", request.form['login'], time)
             response.set_cookie("pass", self.hash(request.form[
                                 'pass'], request.form["login"]), time)
+            self.me = request.form['login']
             return response
 
         else:
