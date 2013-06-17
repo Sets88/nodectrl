@@ -11,6 +11,7 @@ import os
 from xml.dom import minidom
 from flask import abort
 from nodeoperations import NodeOperations
+from sqlalchemy.exc import OperationalError
 
 Base = declarative_base()
 Session = sessionmaker()
@@ -26,19 +27,19 @@ class NodesAPI(object):
         self.db_connect(settings)
 
     def db_connect(self, settings):
-        try:
-            if settings['engine'] == "mysql":
-                self.db_engine = create_engine(
-                    "mysql://%s:%s@%s:%s/%s?init_command=set names utf8" % (settings['user'], settings['password'], settings['host'], settings['port'], settings['db'])
-                    , echo=True, convert_unicode=True)
-            elif settings['engine'] == "sqlite":
-                self.db_engine = create_engine("sqlite:///%s" % settings['db'])
-        except:
-            abort(404)
+        if settings['engine'] == "mysql":
+            self.db_engine = create_engine(
+                "mysql://%s:%s@%s:%s/%s?init_command=set names utf8" % (settings['user'], settings['password'], settings['host'], settings['port'], settings['db'])
+                , echo=True, convert_unicode=True)
+        elif settings['engine'] == "sqlite":
+            self.db_engine = create_engine("sqlite:///%s" % settings['db'])
+
         Session.configure(bind=self.db_engine)
         self.session = Session()
-        Base.metadata.create_all(self.db_engine)
-
+        try:
+            Base.metadata.create_all(self.db_engine)
+        except OperationalError:
+            raise NodeException("Can't connect to database")
 
     def get_by_id(self, id):
         return self.session.query(Node).filter_by(id=id).first()
@@ -57,7 +58,11 @@ class NodesAPI(object):
         return self.session.query(Node).filter_by(id=id).delete()
         
     def save_all(self):
-        self.session.commit()
+        try:
+            self.session.flush()
+            self.session.commit()
+        except:
+            self.session.rollback()
         self.close_session()
 
     def close_session(self):
