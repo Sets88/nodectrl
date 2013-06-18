@@ -14,7 +14,7 @@ Base = declarative_base()
 Session = sessionmaker()
 
 # All permissions and default values
-permissions = {"nodes_add_nodes": ["test"],
+permissions = {"nodes_add_nodes": [],
                "nodes_delete_nodes": [],
                "nodes_move_nodes": [],
                "nodes_reset_flags": [],
