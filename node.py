@@ -13,6 +13,16 @@ from sqlalchemy.exc import OperationalError
 Base = declarative_base()
 Session = sessionmaker()
 
+# All permissions and default values
+permissions = {"nodes_add_nodes": ["test"],
+               "nodes_delete_nodes": [],
+               "nodes_move_nodes": [],
+               "nodes_reset_flags": [],
+               "nodes_edit_nodes": [],
+               "nodes_check_nodes": ["all"],
+               "nodes_autoadd_nodes": ["all"],
+               "nodes_automove_nodes": []
+               }
 
 class NodesAPI(object):
 
