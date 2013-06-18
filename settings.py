@@ -3,6 +3,8 @@ import json
 import ipaddr
 import os
 
+# All permissions and default values
+permissions = {"settings_edit" : ["all"]}
 
 class Settings(object):
 
@@ -22,7 +24,7 @@ class Settings(object):
                    ["Default", [("192.168.1.0/24", "1")]]
                ],
                "addlinks": {},
-               "permissions": {}
+               "permissions": permissions
                }
 
     def __init__(self):
@@ -54,7 +56,9 @@ class Settings(object):
         if len(self.options['users']) > 1:
             try:
                 self.options['users'].pop(name)
+                print "\n\n%s\n\n"%name
             except KeyError:
+                print "\n\n%s\n\n"%name
                 pass
 
     def edit_link(self, name, link, oldname=None):
@@ -143,6 +147,46 @@ class Settings(object):
                 self.edit_links(data["addlinks"])
             if "categories" in data:
                 self.set_categories(data['categories'])
+
+    def join_permissions(self, perm):
+        if isinstance(perm, dict):
+            perm.update(self.options['permissions'])
+            self.options['permissions'] = perm
+            return True
+        return None
+
+    def has_permissions(self, permission, user):
+        if user in self.options['permissions'][permission] or "all" in self.options['permissions'][permission]:
+            return True
+        elif user == "Annonymous":
+            return True
+        else:
+            return False
+
+    def get_permissions(self, user):
+        permissions = []
+        print "\n\n%s\n\n"%user
+        for perm in self.options['permissions'].items():
+            if user in perm[1] or "all" in perm[1]:
+                permissions.append(perm[0])
+            elif user == "Annonymous":
+                permissions.append(perm[0])
+        return permissions
+
+    def set_permissions(self, permission, data):
+        if permission not in settings['permissions']:
+            return None
+        users = [x.strip() for x in data.split(',')]
+        for user in users:
+            if user not in settings['users'] and user != "all":
+                users.pop(users.index(user))
+        if users == ['']:
+            settings['permissions'].pop(permission)
+        else:
+            settings['permissions'][permission] = users
+
+
+
 
     def save(self):
         f = open(os.path.join(self.root_path, "settings.json"), "w")
