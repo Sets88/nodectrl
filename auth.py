@@ -10,7 +10,6 @@ class Auth(object):
     def __init__(self, users, secret):
         self.userlist = users
         self.secret = secret
-        self.me = None
 
     def do_login_window(self):
         if (request.method == "POST"):
@@ -31,7 +30,6 @@ class Auth(object):
             response.set_cookie("user", request.form['login'], time)
             response.set_cookie("pass", self.hash(request.form[
                                 'pass'], request.form["login"]), time)
-            self.me = request.form['login']
             return response
 
         else:
@@ -41,6 +39,7 @@ class Auth(object):
         response = make_response(redirect("login/"))
         response.set_cookie("user", "", 0)
         response.set_cookie("pass", "", 0)
+        self.me = None
         return response
 
     def hash(self, password, user):
@@ -60,10 +59,10 @@ class Auth(object):
 
     def is_logged(self):
         if len(self.userlist) == 0:
-            return True
+            return "Annonymous"
         try:
             if self.hash(self.userlist[request.cookies.get("user")], request.cookies.get("user")) == request.cookies.get("pass"):
-                return True
+                return request.cookies.get("user")
             else:
                 return False
         except:
