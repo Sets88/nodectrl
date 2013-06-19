@@ -63,9 +63,11 @@
 											<a href="/cat/{{ cat[0] }}">{{ cat[1][0] }}</a>
 										</li>
 									{% endfor %}
+									{% if "nodes_show_ips" in perms %}
 									<li>
 										<a href="/freeip/">Свободные IP</a>
 									</li>
+									{% endif %}
 								</ul>
 							</li>
 						</ul>
