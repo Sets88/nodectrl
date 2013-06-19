@@ -197,7 +197,7 @@ class Settings(object):
             return None
         users = [x.strip() for x in data.split(',')]
         for user in users:
-            if self._check_user_exists(user):
+            if not self._check_user_exists(user):
                 users.pop(users.index(user))
         if users == ['']:
             settings['permissions'][permission] = []
