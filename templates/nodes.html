@@ -44,6 +44,7 @@
 			{% else %}
 				<span class="label label-important">
 			{% endif %}
+			{% if "nodes_show_ips" in perms %}
 				<small>
 					{% if node.port %}
 					{{ node.port }}
@@ -54,13 +55,19 @@
 				(
 					<span class="ipaddr">{{ node.ipaddr }}</span>
 				)
+			{% else %}
+				{{ node.comment }}
+				</span>
+			{% endif %}
 		{% else %}
 		<div class="noip">
+				{% if "nodes_show_ips" in perms %}
 				<small>
 					{% if node.port %}
 					{{ node.port }}
 					{% endif %}
 				</small>
+				{% endif %}
 			{{ node.comment }}
 		{% endif %}
 			<span class="adminbut">
@@ -102,6 +109,7 @@
 
 </div>
 {% endfor %}
+{% if "nodes_add_nodes" in perms %}
 	<div class="ipgroup">
 		<div class="">
 			<form action="/addnode/0/" method="POST" class="navbar-form" id="addtoroot">
@@ -110,6 +118,7 @@
 			</form>
 		</div>
 	</div>
+{% endif %}
 </ul>
 </div>
 {% endblock %}
