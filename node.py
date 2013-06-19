@@ -21,7 +21,8 @@ permissions = {"nodes_add_nodes": [],
                "nodes_edit_nodes": [],
                "nodes_check_nodes": ["all"],
                "nodes_autoadd_nodes": [],
-               "nodes_automove_nodes": []
+               "nodes_automove_nodes": [],
+               "nodes_show_ips": []
                }
 
 class NodesAPI(object):
