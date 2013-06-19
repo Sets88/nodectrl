@@ -244,6 +244,7 @@ def reset_flags():
 
 @app.route("/freeip/")
 @login_required
+@require_permission("nodes_show_ips")
 def free_ip():
     nodes = sw_api.get_free_ips(get_cat())
     if not nodes:
