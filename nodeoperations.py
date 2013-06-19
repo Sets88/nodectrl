@@ -57,7 +57,6 @@ class NodeOperations(object):
             status = host.getElementsByTagName("status")[0].getAttribute("state")
             if status == "up":
                 ips.append(address)
-        print ips
         return ips
 
     def _find_port(self, childs, mac, vlan, ipaddr=None, port=0):
