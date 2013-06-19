@@ -62,11 +62,11 @@ ul
 	padding: 0;
 	padding-left: 0px;
 }
-.label-important a
+.label-important a, .label-important span
 {
 	color: white;
 }
-.normal-ip a
+.normal-ip, .normal-ip a
 {
 	color: 000066;
 }
