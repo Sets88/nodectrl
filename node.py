@@ -188,7 +188,6 @@ class NodesAPI(object):
             ips.append(str(node.ipaddr))
         for net in settings.get_nets(catid):
             for ip in net[0].iterhosts():
-                print ip
                 if str(ip) not in ips:
                     freeip.append(ip)
         return freeip
