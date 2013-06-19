@@ -55,11 +55,9 @@ class Settings(object):
     def delete_user(self, name):
         if len(self.options['users']) > 1:
             try:
-                self.options['users'].pop(name)
-                print "\n\n%s\n\n"%name
+                return self.options['users'].pop(name)
             except KeyError:
-                print "\n\n%s\n\n"%name
-                pass
+                return None
 
     def edit_link(self, name, link, oldname=None):
         if oldname is not None:
@@ -165,7 +163,6 @@ class Settings(object):
 
     def get_permissions(self, user):
         permissions = []
-        print "\n\n%s\n\n"%user
         for perm in self.options['permissions'].items():
             if user in perm[1] or "all" in perm[1]:
                 permissions.append(perm[0])
