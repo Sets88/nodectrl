@@ -145,6 +145,19 @@ class Settings(object):
                 self.edit_links(data["addlinks"])
             if "categories" in data:
                 self.set_categories(data['categories'])
+            if "permissions" in data:
+                self.init_permissions(data['permissions'])
+
+    def init_permissions(self, permissions):
+        for perm in permissions.items():
+            if isinstance(perm[1], list):
+                for user in perm[1]:
+                    if not self._check_user_exists(user):
+                        permissions[perm[0]].pop(perm[1].index(user))
+            else:
+                permissions[perm[0]] = []
+        self.options['permissions'] = permissions
+
 
     def join_permissions(self, perm):
         if isinstance(perm, dict):
@@ -170,15 +183,24 @@ class Settings(object):
                 permissions.append(perm[0])
         return permissions
 
+    def _check_user_exists(self, user):
+        if user in self.options['users']:
+            return True
+        elif user == "all":
+            return True
+        else:
+            return False
+
+
     def set_permissions(self, permission, data):
-        if permission not in settings['permissions']:
+        if permission not in self.options['permissions']:
             return None
         users = [x.strip() for x in data.split(',')]
         for user in users:
-            if user not in settings['users'] and user != "all":
+            if self._check_user_exists(user):
                 users.pop(users.index(user))
         if users == ['']:
-            settings['permissions'].pop(permission)
+            settings['permissions'][permission] = []
         else:
             settings['permissions'][permission] = users
 
