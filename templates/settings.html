@@ -178,11 +178,15 @@
 			<table width="100%">
 			{% for perm in settings['permissions'].items() %}
 			{% if act == "editpermission" and permission == perm[0] %}
-			<form action="/settings/editpermission/{{ perm[0] }}/" method="POST">
-				<label>{{ perm[0] }}</label>
-				<input type="text" name="permission" value="{{ ", ".join(perm[1]) }}">
-				<input type="submit" value="Изменить">
-			</form>
+			<tr>
+				<td colspan=3>
+				<form action="/settings/editpermission/{{ perm[0] }}/" method="POST">
+					<label><strong>{{ perm[0] }}</strong></label>
+					<input type="text" name="permission" value="{{ ", ".join(perm[1]) }}">
+					<input type="submit" value="Изменить">
+				</form>
+				</td>
+			</tr>
 			{% else %}
 			<tr>
 				<td>{{ perm[0] }}</td>
