@@ -21,24 +21,34 @@
 							<li class="dropdown-submenu">
 							<a href="#">Свич</a>
 								<ul class="dropdown-menu">
+									{% if "nodes_check_nodes" in perms %}
 									<li>
 										<a href="/checknodes/" tabindex="-1">Проверить</a>
 									</li>
+									{% endif %}
+									{% if "nodes_autoadd_nodes" in perms %}
 									<li>
 										<a href="/autoaddnodes/" tabindex="-1">Автодобавление</a>
 									</li>
+									{% endif %}
+									{% if "nodes_automove_nodes" in perms %}
 									<li>
 										<a href="/automovenodes/" tabindex="-1">Переместить свичи</a>
 									</li>
+									{% endif %}
+									{% if "nodes_reset_flags" in perms %}
 									<li>
 										<a href="/resetflags/" tabindex="-1">Очистить уведомления</a>
 									</li>
+									{% endif %}
 									<li>
 										<a href="#" id="showall" onClick="hide();return false;">Показать без IP</a>
 									</li>
+									{% if "settings_edit" in perms %}
 									<li>
 										<a href="/settings/" >Настройки</a>
 									</li>
+									{% endif %}
 								</ul>
 							</li>
 						</ul>
