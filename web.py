@@ -246,10 +246,24 @@ def reset_flags():
 @login_required
 @require_permission("nodes_show_ips")
 def free_ip():
-    nodes = sw_api.get_free_ips(get_cat())
+    nodes = sw_api.freeip_list(get_cat())
     if not nodes:
         nodes = []
     return render_template("freeip.html", nodes=nodes, addlinks=settings['addlinks'], cats=enumerate(settings['categories']))
+
+
+@app.route("/freeip/editcomment/<ipaddr>/", methods=["GET", "POST"])
+@login_required
+@require_permission("nodes_show_ips")
+def freeip_edit_comment(ipaddr):
+    if request.method == 'POST':
+        sw_api.freeip_set_comment(ipaddr, request.form['comment'])
+        return redirect("/freeip/")
+    else:
+        nodes = sw_api.freeip_list(get_cat())
+        if not nodes:
+            nodes = []
+        return render_template("freeip.html", nodes=nodes, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="editcomment", ip=ipaddr)
 
 
 # SETTINGS ##################
