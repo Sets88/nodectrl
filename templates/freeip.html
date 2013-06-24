@@ -14,11 +14,29 @@
 </table>
 <div>
 	<ul style="margin-left:0px;">
+		<table>
 {% for node in nodes recursive %}
-		<div class="freeip hlgreen">
-			{{ node }}
-		</div>
+	<tr class="hlgreen">
+		<td>
+			{{ node.ipaddr }}
+		</td>
+		{% if act == "editcomment" and ip == node.ipaddr %}
+			<td colspan=2>
+				<form action="/freeip/editcomment/{{ node.ipaddr }}/" method="POST">
+					<input name="comment" value="{{ node.comment }}"><input type="submit" value="Изменить">
+				</form>
+			</td>
+		{% else %}
+			<td>
+				{{ node.comment }}
+			</td>
+			<td>
+				<a href="/freeip/editcomment/{{ node.ipaddr }}/"><img src="/static/images/edit.png"></a>
+			</td>
+		{% endif %}
+	</tr>
 {% endfor %}
+		</table>
 	</ul>
 </div>
 {% endblock %}
