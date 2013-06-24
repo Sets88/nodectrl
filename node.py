@@ -33,6 +33,13 @@ class NodesAPI(object):
         self.session = None
         self.db_connect(settings)
 
+    def _ip_to_int(self, ipaddr):
+        try:
+            ip = struct.unpack("!I", socket.inet_aton(ipaddr))[0]
+        except:
+            return None
+        return ip            
+
     def db_connect(self, settings):
         if settings['engine'] == "mysql":
             self.db_engine = create_engine(
@@ -55,11 +62,9 @@ class NodesAPI(object):
         return self.session.query(Node).filter_by(parent_id=id).all()
 
     def get_by_ip(self, ipaddr):
-        try:
-            ip = struct.unpack("!I", socket.inet_aton(ipaddr))[0]
-        except:
-            return None
-        return self.session.query(Node).filter_by(ip=ip).first()
+        ip = self._ip_to_int(ipaddr)
+        if ip is not None:
+            return self.session.query(Node).filter_by(ip=ip).first()
 
     def delete_node(self, id):
         return self.session.query(Node).filter_by(id=id).delete()
@@ -180,18 +185,44 @@ class NodesAPI(object):
                     return node.comment
             return res[0].comment
 
-    def get_free_ips(self, catid):
+    def freeip_list(self, catid):
         nodes = self.session.query(Node).filter(Node.catid.in_(
             catid)).filter(Node.ip > 0).order_by("ip").all()
         ips = []
-        freeip = []
+        freeips = []
         for node in nodes:
             ips.append(str(node.ipaddr))
+
         for net in settings.get_nets(catid):
             for ip in net[0].iterhosts():
                 if str(ip) not in ips:
-                    freeip.append(ip)
-        return freeip
+                    freeip = self.session.query(FreeIP).filter(FreeIP.ip == self._ip_to_int(str(ip))).first()
+                    if freeip is None:
+                        freeip = FreeIP()
+                        freeip.ipaddr = str(ip)
+                        freeip.comment = ""
+                    else:
+                        print freeip.comment
+                    freeips.append(freeip)
+        return freeips
+
+    def freeip_set_comment(self, ipaddr, comment):
+        ip = self._ip_to_int(ipaddr)
+        if ip is not None and ip > 0:
+            freeip = self.session.query(FreeIP).filter(FreeIP.ip == ip).first()
+            if freeip is not None:
+                if comment == "":
+                    self.session.query(FreeIP).filter(FreeIP.ip == ip).delete()
+                else:
+                    freeip.comment = comment
+            else:
+                if comment == "":
+                    return None
+                new_freeip = FreeIP()
+                new_freeip.ip = ip
+                new_freeip.comment = comment
+                self.session.add(new_freeip)
+            self.save_all()
 
     def setup(self):
         pass
@@ -235,6 +266,18 @@ class Node(Base):
             return self.comment.encode("utf-8")
         else:
             return ""
+
+
+class FreeIP(Base):
+    __tablename__ = "freeip"
+
+    ip = Column(Integer, primary_key=True)
+    comment = Column(String(250))
+
+    @reconstructor
+    def init_on_load(self):
+        self.child_list = []
+        self.ipaddr = socket.inet_ntoa(struct.pack("!I", self.ip))
 
 
 class NodeList(object):
