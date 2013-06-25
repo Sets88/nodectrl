@@ -46,7 +46,7 @@ class NodesAPI(object):
                 "mysql://%s:%s@%s:%s/%s?init_command=set names utf8" % (settings[
                                                                         'user'], settings['password'], settings['host'], settings['port'], settings['db']), echo=True, convert_unicode=True, pool_recycle=7200)
         elif settings['engine'] == "sqlite":
-            self.db_engine = create_engine("sqlite:///%s" % settings['db'])
+            self.db_engine = create_engine("sqlite:///%s" % settings['db'], echo=True)
 
         Session.configure(bind=self.db_engine)
         self.session = Session()
@@ -186,6 +186,21 @@ class NodesAPI(object):
             return res[0].comment
 
     def freeip_list(self, catid):
+
+        def find_freeip(freeips, ipaddr, return_none=False):
+            """Finds ipaddr in commented ips and returns it, 
+            if found, or return new object with empty comment, 
+            if return_none set, return None if not found in commented ips"""
+            for freeip in freeips:
+                if freeip.ipaddr == ipaddr:
+                    return freeip
+            if return_none:
+                return None
+            freeip = FreeIP()
+            freeip.ipaddr = ipaddr
+            freeip.comment = ""
+            return freeip
+
         nodes = self.session.query(Node).filter(Node.catid.in_(
             catid)).filter(Node.ip > 0).order_by("ip").all()
         ips = []
@@ -194,16 +209,14 @@ class NodesAPI(object):
             ips.append(str(node.ipaddr))
 
         for net in settings.get_nets(catid):
+            comm_freeips = self.session.query(FreeIP).filter(FreeIP.ip.in_(map(lambda ip:self._ip_to_int(str(ip)),net[0].iterhosts()))).all()
             for ip in net[0].iterhosts():
                 if str(ip) not in ips:
-                    freeip = self.session.query(FreeIP).filter(FreeIP.ip == self._ip_to_int(str(ip))).first()
-                    if freeip is None:
-                        freeip = FreeIP()
-                        freeip.ipaddr = str(ip)
-                        freeip.comment = ""
-                    else:
-                        print freeip.comment
-                    freeips.append(freeip)
+                    freeips.append(find_freeip(comm_freeips, str(ip)))
+                else:
+                    freeip = find_freeip(comm_freeips, str(ip), return_none=True)
+                    if freeip:
+                        freeips.append(freeip)
         return freeips
 
     def freeip_set_comment(self, ipaddr, comment):
