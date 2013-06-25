@@ -285,8 +285,7 @@ def settings_set_secret():
         app.secret_key = str(request.form['secret'])
         auth.secret = str(request.form['secret'])
         return redirect("/settings/")
-    else:
-        abort(404)
+    abort(404)
 
 
 @app.route("/settings/setdboptions/", methods=["GET", "POST"])
@@ -305,8 +304,7 @@ def settings_set_db_options():
         settings.set_db_options(db_opt)
         sw_api.db_connect(settings['db'])
         return redirect("/settings/")
-    else:
-        abort(404)
+    abort(404)
 
 
 @app.route("/settings/edituser/<name>/", methods=["GET", "POST"])
@@ -449,6 +447,8 @@ def settings_generate_hash():
     if request.method == 'POST':
         hashh = auth.get_ip_hash(request.form['text'])
         return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), hashh=hashh)
+    else:
+        abort(404)
 
 
 @app.route("/settings/savesettings/")
@@ -506,6 +506,7 @@ def ajax_add_node(id):
         sw_api.save_all()
 
         return jsonify(resp_dict)
+    abort(404)
 
 
 @app.route("/ajax/movenode/<int:id>/", methods=["GET", "POST"])
