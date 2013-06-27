@@ -75,7 +75,6 @@ class NodesAPI(object):
             self.session.commit()
         except:
             self.session.rollback()
-        self.close_session()
 
     def close_session(self):
         self.session.close()
@@ -219,6 +218,13 @@ class NodesAPI(object):
                         freeips.append(freeip)
         return freeips
 
+    def freeip_get_by_ip(self, ipaddr):
+        ip = self._ip_to_int(ipaddr)
+        if ip is not None and ip>0:
+            freeip = self.session.query(FreeIP).filter(FreeIP.ip == ip).first()
+            if freeip:
+                return freeip                   
+
     def freeip_set_comment(self, ipaddr, comment):
         ip = self._ip_to_int(ipaddr)
         if ip is not None and ip > 0:
@@ -231,11 +237,13 @@ class NodesAPI(object):
             else:
                 if comment == "":
                     return None
-                new_freeip = FreeIP()
-                new_freeip.ip = ip
-                new_freeip.comment = comment
-                self.session.add(new_freeip)
+                freeip = FreeIP()
+                freeip.ip = ip
+                freeip.comment = comment
+                self.session.add(freeip)
             self.save_all()
+            if freeip:
+                return freeip
 
     def setup(self):
         pass
