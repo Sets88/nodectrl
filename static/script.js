@@ -67,6 +67,26 @@ $(document).ready(function(){
 		return false;
 	});
 
+	$(document).on('click',".freeipedit", function()
+	{
+		var obj = $(this);
+		$.ajax({
+			url: '/ajax' + $(this).attr("href"),
+			dataType: "json",
+			success: function(json)
+			{
+
+				if (json.result=="0")
+				{
+					obj.parent().prev().hide();
+					obj.parent().prev().html("<form action=\"" + "\" method=\"POST\" class=\"navbar-form\"><input name=\"comment\" class=\"noevent\" type=\"text\" value=\"" + json.comment + "\"><input name=\"submit\" class=\"freeipeditbutton btn\" id=\"" + json.ipaddr + "\" type=\"submit\" value=\"Изменить\"></form>").fadeIn("slow");
+				}
+				else alert(json.result);
+			}
+		});
+		return false;
+	});
+
 	$(document).on('click',"#showipcalc", function()
 	{
 		var obj = $("#ipcalc");
@@ -243,6 +263,28 @@ $(document).ready(function(){
 					$("#"+json.id+".ipgroup").appendTo("#"+json.parent+".ipgroup ul:eq(0)");
 				}
 				else alert(json.result);
+			}
+		});
+		return false;
+		event.preventDefault();
+	});
+
+	$(document).on('click',".freeipeditbutton",function()
+	{
+		var obj = $(this);
+		var dataString = $(this).parent().serialize();
+		$.ajax({
+			url: '/ajax/freeip/editcomment/' + $(this).attr("id") + "/",
+			type: "POST",
+			dataType: "json",
+			data: dataString,
+			cache: false,
+			success: function(json)
+			{
+				if (json.result=="0")
+				{
+					obj.parent().parent().html(json.comment)
+				}
 			}
 		});
 		return false;
