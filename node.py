@@ -232,6 +232,7 @@ class NodesAPI(object):
             if freeip is not None:
                 if comment == "":
                     self.session.query(FreeIP).filter(FreeIP.ip == ip).delete()
+                    freeip = None
                 else:
                     freeip.comment = comment
             else:
