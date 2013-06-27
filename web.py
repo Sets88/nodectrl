@@ -589,7 +589,8 @@ def ajax_freeip_edit(ipaddr):
         if freeip:
             resp_dict['comment'] = freeip.comment
             resp_dict['result'] = 0
-        elif request.form['comment']:
+        elif request.form['comment'] == "":
+            resp_dict['comment'] = ""
             resp_dict['result'] = 0
         else:
             resp_dict['result'] = 1
