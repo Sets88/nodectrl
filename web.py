@@ -578,6 +578,32 @@ def ajax_get_nodename_by_mac(mac):
     return jsonify(resp_dict)
 
 
+@app.route("/ajax/freeip/editcomment/<ipaddr>/", methods=["GET", "POST"])
+@logged_in_or_404
+@require_permission("nodes_show_ips")
+def ajax_freeip_edit(ipaddr):
+    resp_dict = {}
+    node = sw_api.freeip_get_by_ip(ipaddr)
+    if request.method == 'POST':
+        freeip = sw_api.freeip_set_comment(ipaddr, request.form['comment'])
+        if freeip:
+            resp_dict['comment'] = freeip.comment
+            resp_dict['result'] = 0
+        elif request.form['comment']:
+            resp_dict['result'] = 0
+        else:
+            resp_dict['result'] = 1
+
+        return jsonify(resp_dict)
+    if node:
+        resp_dict['ipaddr'] = ipaddr
+        resp_dict['comment'] = node.comment.replace('"', "&quot;")
+    else:
+        resp_dict['ipaddr'] = ipaddr
+        resp_dict['comment'] = ""
+    resp_dict['result'] = 0
+    return jsonify(resp_dict)
+
 #@app.route("/ajax/")
 #@logged_in_or_404
 #def ajax():
