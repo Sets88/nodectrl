@@ -186,12 +186,13 @@ class NodesAPI(object):
 
     def freeip_list(self, catid):
 
-        def find_freeip(freeips, ipaddr, return_none=False):
+        def find_freeip(freeips, ipaddr, return_none=False, exists=False):
             """Finds ipaddr in commented ips and returns it, 
             if found, or return new object with empty comment, 
             if return_none set, return None if not found in commented ips"""
             for freeip in freeips:
                 if freeip.ipaddr == ipaddr:
+                    freeip.exists = exists
                     return freeip
             if return_none:
                 return None
@@ -213,7 +214,7 @@ class NodesAPI(object):
                 if str(ip) not in ips:
                     freeips.append(find_freeip(comm_freeips, str(ip)))
                 else:
-                    freeip = find_freeip(comm_freeips, str(ip), return_none=True)
+                    freeip = find_freeip(comm_freeips, str(ip), return_none=True, exists=True)
                     if freeip:
                         freeips.append(freeip)
         return freeips
@@ -298,7 +299,7 @@ class FreeIP(Base):
 
     @reconstructor
     def init_on_load(self):
-        self.child_list = []
+        self.exists = False
         self.ipaddr = socket.inet_ntoa(struct.pack("!I", self.ip))
 
 
