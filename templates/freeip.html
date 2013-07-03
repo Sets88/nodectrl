@@ -18,7 +18,11 @@
 {% for node in nodes recursive %}
 	<tr class="freeip hlgreen">
 		<td>
-			{{ node.ipaddr }}
+			{% if node.exists %}
+				<span class="label label-success">{{ node.ipaddr }}</span>
+			{% else %}
+				{{ node.ipaddr }}
+			{% endif %}
 		</td>
 		{% if act == "editcomment" and ip == node.ipaddr %}
 			<td colspan=2>
