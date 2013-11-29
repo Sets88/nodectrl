@@ -28,16 +28,21 @@ class Settings(object):
                }
 
     def __init__(self):
+        if(self.__initialized):
+            return
         try:
             f = open(os.path.join(self.root_path, "settings.json"), "r")
         except IOError:
             self.load()
         else:
             self.load(json.load(f))
+        self.__initialized = True
+        print "\n\n INIT \n\n"
 
     def __new__(cls):
         if not hasattr(cls, 'instance'):
              cls.instance = super(Settings, cls).__new__(cls)
+             cls.instance.__initialized = False
         return cls.instance
 
     def __getitem__(self, key):
@@ -85,6 +90,7 @@ class Settings(object):
 
     def add_category(self, name):
         self.options['categories'].append([name, []])
+
 
     def edit_category(self, id, name):
         if id < len(self.options['categories']):
@@ -135,6 +141,7 @@ class Settings(object):
 
     def set_categories(self, data):
         self.options['categories'] = data
+#        print "\n %s \n" % self.options['categories']
 
     def load(self, data=None):
         if data is None:
