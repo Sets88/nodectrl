@@ -43,7 +43,7 @@ class NodesAPI(object):
     def db_connect(self):
         if Settings()['db']['engine'] == "mysql":
             self.db_engine = create_engine(
-                "mysql://%s:%s@%s:%s/%s?init_command=set names utf8" % (Settings()[
+                "mysql://%s:%s@%s:%s/%s?init_command=set names utf8" % (Settings()['db'][
                                                                         'user'], Settings()['db']['password'], Settings()['db']['host'], Settings()['db']['port'], Settings()['db']['db']), echo=True, convert_unicode=True, pool_recycle=7200)
         elif Settings()['db']['engine'] == "sqlite":
             self.db_engine = create_engine("sqlite:///%s" % Settings()['db']['db'], echo=True)
