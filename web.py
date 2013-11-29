@@ -422,8 +422,7 @@ def settings_delete_subnet(catid, id):
 @require_permission("settings_edit")
 def settings_edit_subnet(catid, id):
     if request.method == 'POST':
-        Settings().edit_subnet(int(id), int(
-            catid), request.form['net'], request.form['vlan'])
+        Settings().edit_subnet(int(catid), int(id), request.form['net'], request.form['vlan'])
         return redirect("/settings/")
     else:
         return render_template("settings.html", settings=Settings(), addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), act="editsubnet", catid=catid, id=id)
