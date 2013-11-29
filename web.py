@@ -7,23 +7,23 @@ from flask import jsonify
 from flask import make_response
 from flask import render_template
 from node import NodesAPI, Node, NodeException, permissions as node_permissons
-from settings import settings
+from settings import Settings
 from auth import Auth
 from functools import wraps
 import re
 
 app = Flask(__name__)
 
-sw_api = NodesAPI(settings['db'])
+sw_api = NodesAPI()
 
-auth = Auth(settings['users'], settings['secret'])
+auth = Auth(Settings()['users'], Settings()['secret'])
 
-app.secret_key = str(settings['secret'])
+app.secret_key = str(Settings()['secret'])
 
 cookies = {}
 
 # Permissions
-settings.join_permissions(node_permissons)
+Settings().join_permissions(node_permissons)
 
 def get_cat():
     """Gets cat from cookies otherwise returns 0"""
@@ -32,7 +32,7 @@ def get_cat():
 
     try:
         for cat in cats:
-            if settings['categories'][int(cat)]:
+            if Settings()['categories'][int(cat)]:
                 pass
     except (IndexError, ValueError):
         return ["0"]
@@ -77,7 +77,7 @@ def require_permission(permission):
     def decorator(func):
         @wraps(func)
         def wraper(*args, **kwargs):
-            if settings.has_permissions(permission, auth.is_logged()):
+            if Settings().has_permissions(permission, auth.is_logged()):
                 return func(*args, **kwargs)
             else:
                 return abort(404)
@@ -119,7 +119,7 @@ def nodes():
     """Display nodes list"""
     nodes = sw_api.list_nodes(get_cat())
     sw_api.close_session()
-    return render_template("nodes.html", nodes=nodes, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), perms=settings.get_permissions(auth.is_logged()))
+    return render_template("nodes.html", nodes=nodes, addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), perms=Settings().get_permissions(auth.is_logged()))
 
 
 @app.route("/editnode/<int:id>/", methods=["GET", "POST"])
@@ -137,7 +137,7 @@ def edit_node(id):
     else:
         nodes = sw_api.list_nodes(get_cat())
         sw_api.close_session()
-        return render_template("nodes.html", nodes=nodes, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), perms=settings.get_permissions(auth.is_logged()), act="edit", id=id)
+        return render_template("nodes.html", nodes=nodes, addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), perms=Settings().get_permissions(auth.is_logged()), act="edit", id=id)
 
 
 @app.route("/addnode/<int:id>/", methods=["GET", "POST"])
@@ -159,7 +159,7 @@ def add_node(id):
     else:
         nodes = sw_api.list_nodes(get_cat())
         sw_api.close_session()
-        return render_template("nodes.html", nodes=nodes, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), perms=settings.get_permissions(auth.is_logged()), act="add", id=id)
+        return render_template("nodes.html", nodes=nodes, addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), perms=Settings().get_permissions(auth.is_logged()), act="add", id=id)
 
 
 @app.route("/movenode/<int:id>/", methods=["GET", "POST"])
@@ -177,7 +177,7 @@ def move_node(id):
     else:
         nodes = sw_api.list_nodes(get_cat())
         sw_api.close_session()
-        return render_template("nodes.html", nodes=nodes, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), perms=settings.get_permissions(auth.is_logged()), act="move", id=id)
+        return render_template("nodes.html", nodes=nodes, addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), perms=Settings().get_permissions(auth.is_logged()), act="move", id=id)
 
 
 @app.route("/deletenode/<int:id>/")
@@ -194,7 +194,7 @@ def delete_node(id):
 def set_cat(catid):
     """Change category of nodes"""
     global cookies
-    if len(settings['categories']) > int(catid):
+    if len(Settings()['categories']) > int(catid):
         cookies["cat"] = catid
     return redirect("/")
 
@@ -219,7 +219,7 @@ def autoadd_nodes():
 @login_required
 @require_permission("nodes_automove_nodes")
 def automove_nodes():
-    sw_api.automove_nodes(get_cat(), settings['categories'])
+    sw_api.automove_nodes(get_cat(), Settings()['categories'])
     return redirect("/")
 
 
@@ -249,7 +249,7 @@ def free_ip():
     nodes = sw_api.freeip_list(get_cat())
     if not nodes:
         nodes = []
-    return render_template("freeip.html", nodes=nodes, addlinks=settings['addlinks'], cats=enumerate(settings['categories']))
+    return render_template("freeip.html", nodes=nodes, addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']))
 
 
 @app.route("/freeip/editcomment/<ipaddr>/", methods=["GET", "POST"])
@@ -263,7 +263,7 @@ def freeip_edit_comment(ipaddr):
         nodes = sw_api.freeip_list(get_cat())
         if not nodes:
             nodes = []
-        return render_template("freeip.html", nodes=nodes, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="editcomment", ip=ipaddr)
+        return render_template("freeip.html", nodes=nodes, addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), act="editcomment", ip=ipaddr)
 
 
 # SETTINGS ##################
@@ -273,7 +273,7 @@ def freeip_edit_comment(ipaddr):
 @login_required
 @require_permission("settings_edit")
 def settings_menu():
-    return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']))
+    return render_template("settings.html", settings=Settings(), addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']))
 
 
 @app.route("/settings/setsecret/", methods=["GET", "POST"])
@@ -281,7 +281,7 @@ def settings_menu():
 @require_permission("settings_edit")
 def settings_set_secret():
     if request.method == 'POST':
-        settings.set_secret(str(request.form['secret']))
+        Settings().set_secret(str(request.form['secret']))
         app.secret_key = str(request.form['secret'])
         auth.secret = str(request.form['secret'])
         return redirect("/settings/")
@@ -301,8 +301,8 @@ def settings_set_db_options():
             db_opt['password'] = request.form['password']
         db_opt['host'] = request.form['host']
         db_opt['port'] = request.form['port']
-        settings.set_db_options(db_opt)
-        sw_api.db_connect(settings['db'])
+        Settings().set_db_options(db_opt)
+        sw_api.db_connect(Settings()['db'])
         return redirect("/settings/")
     abort(404)
 
@@ -312,10 +312,10 @@ def settings_set_db_options():
 @require_permission("settings_edit")
 def settings_edit_user(name):
     if request.method == 'POST':
-        settings.edit_user(name, request.form['password'])
+        Settings().edit_user(name, request.form['password'])
         return redirect("/settings/")
     else:
-        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="edituser", id=name)
+        return render_template("settings.html", settings=Settings(), addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), act="edituser", id=name)
 
 
 @app.route("/settings/adduser/", methods=["GET", "POST"])
@@ -323,17 +323,17 @@ def settings_edit_user(name):
 @require_permission("settings_edit")
 def settings_add_user():
     if request.method == 'POST':
-        settings.edit_user(request.form['login'], request.form['password'])
+        Settings().edit_user(request.form['login'], request.form['password'])
         return redirect("/settings/")
     else:
-        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="adduser")
+        return render_template("settings.html", settings=Settings(), addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), act="adduser")
 
 
 @app.route("/settings/deleteuser/<name>/")
 @login_required
 @require_permission("settings_edit")
 def settings_delete_user(name):
-    settings.delete_user(name)
+    Settings().delete_user(name)
     return redirect("/settings/")
 
 
@@ -342,11 +342,11 @@ def settings_delete_user(name):
 @require_permission("settings_edit")
 def settings_edit_link(name):
     if request.method == 'POST':
-        settings.edit_link(request.form['name'].replace(
+        Settings().edit_link(request.form['name'].replace(
             "/", ""), request.form['url'], name)
         return redirect("/settings/")
     else:
-        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="editlink", id=name)
+        return render_template("settings.html", settings=Settings(), addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), act="editlink", id=name)
 
 
 @app.route("/settings/addlink/", methods=["GET", "POST"])
@@ -354,17 +354,17 @@ def settings_edit_link(name):
 @require_permission("settings_edit")
 def settings_add_link():
     if request.method == 'POST':
-        settings.edit_link(request.form['name'], request.form['url'])
+        Settings().edit_link(request.form['name'], request.form['url'])
         return redirect("/settings/")
     else:
-        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="addlink")
+        return render_template("settings.html", settings=Settings(), addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), act="addlink")
 
 
 @app.route("/settings/deletelink/<name>/")
 @login_required
 @require_permission("settings_edit")
 def settings_delete_link(name):
-    settings.delete_link(name)
+    Settings().delete_link(name)
     return redirect("/settings/")
 
 
@@ -373,17 +373,17 @@ def settings_delete_link(name):
 @require_permission("settings_edit")
 def settings_add_category():
     if request.method == 'POST':
-        settings.add_category(request.form['name'])
+        Settings().add_category(request.form['name'])
         return redirect("/settings/")
     else:
-        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="addcategory")
+        return render_template("settings.html", settings=Settings(), addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), act="addcategory")
 
 
 @app.route("/settings/deletecategory/<int:id>/")
 @login_required
 @require_permission("settings_edit")
 def settings_delete_category(id):
-    settings.delete_category(id)
+    Settings().delete_category(id)
     return redirect("/settings/")
 
 
@@ -392,10 +392,10 @@ def settings_delete_category(id):
 @require_permission("settings_edit")
 def settings_edit_category(id):
     if request.method == 'POST':
-        settings.edit_category(id, request.form['name'])
+        Settings().edit_category(id, request.form['name'])
         return redirect("/settings/")
     else:
-        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="editcategory", id=id)
+        return render_template("settings.html", settings=Settings(), addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), act="editcategory", id=id)
 
 
 @app.route("/settings/addsubnet/<int:catid>/", methods=["GET", "POST"])
@@ -403,17 +403,17 @@ def settings_edit_category(id):
 @require_permission("settings_edit")
 def settings_add_subnet(catid):
     if request.method == 'POST':
-        settings.add_subnet(catid, request.form['net'], request.form['vlan'])
+        Settings().add_subnet(catid, request.form['net'], request.form['vlan'])
         return redirect("/settings/")
     else:
-        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="addsubnet", catid=catid)
+        return render_template("settings.html", settings=Settings(), addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), act="addsubnet", catid=catid)
 
 
 @app.route("/settings/deletesubnet/<int:catid>/<int:id>/")
 @login_required
 @require_permission("settings_edit")
 def settings_delete_subnet(catid, id):
-    settings.delete_subnet(catid, id)
+    Settings().delete_subnet(catid, id)
     return redirect("/settings/")
 
 
@@ -422,11 +422,11 @@ def settings_delete_subnet(catid, id):
 @require_permission("settings_edit")
 def settings_edit_subnet(catid, id):
     if request.method == 'POST':
-        settings.edit_subnet(int(id), int(
+        Settings().edit_subnet(int(id), int(
             catid), request.form['net'], request.form['vlan'])
         return redirect("/settings/")
     else:
-        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="editsubnet", catid=catid, id=id)
+        return render_template("settings.html", settings=Settings(), addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), act="editsubnet", catid=catid, id=id)
 
 
 @app.route("/settings/editpermission/<permission>/", methods=["GET", "POST"])
@@ -434,10 +434,10 @@ def settings_edit_subnet(catid, id):
 @require_permission("settings_edit")
 def settings_edit_permission(permission):
     if request.method == 'POST':
-        settings.set_permissions(permission, request.form['permission'])
+        Settings().set_permissions(permission, request.form['permission'])
         return redirect("/settings/")
     else:
-        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), act="editpermission", permission=permission)
+        return render_template("settings.html", settings=Settings(), addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), act="editpermission", permission=permission)
 
 
 @app.route("/settings/generatehash/", methods=["POST"])
@@ -446,7 +446,7 @@ def settings_edit_permission(permission):
 def settings_generate_hash():
     if request.method == 'POST':
         hashh = auth.get_ip_hash(request.form['text'])
-        return render_template("settings.html", settings=settings, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), hashh=hashh)
+        return render_template("settings.html", settings=Settings(), addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), hashh=hashh)
     else:
         abort(404)
 
@@ -455,7 +455,7 @@ def settings_generate_hash():
 @login_required
 @require_permission("settings_edit")
 def settings_save_settings():
-    settings.save()
+    Settings().save()
     return redirect("/")
 
 
@@ -530,7 +530,7 @@ def ajax_move_node(id):
         node = sw_api.get_by_id(id)
         nodes = sw_api.list_nodes(get_cat())
         sw_api.close_session()
-        return render_template("moveform.html", node=node, nodes=nodes, cats=enumerate(settings['categories']), act="move", id=id)
+        return render_template("moveform.html", node=node, nodes=nodes, cats=enumerate(Settings()['categories']), act="move", id=id)
 
 
 @app.route("/ajax/deletenode/<int:id>/")
@@ -604,6 +604,25 @@ def ajax_freeip_edit(ipaddr):
         resp_dict['comment'] = ""
     resp_dict['result'] = 0
     return jsonify(resp_dict)
+
+@app.route("/ajax/nodes/")
+@login_required
+def nodes_ajax():
+    """Display nodes list in json"""
+    def get_nodes(nodes, group=0):
+        node_dict = []
+        for node in nodes:
+            node_info = {"name": node.comment}
+            if node.child_list:
+                node_info["children"] = get_nodes(node.child_list, node.id)
+            node_dict.append(node_info)
+        return node_dict
+    nodes = sw_api.list_nodes(get_cat())
+    sw_api.close_session()
+    return jsonify({"name": "root", "children": get_nodes(nodes)})
+
+#    return render_template("nodes.html", nodes=nodes, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), perms=settings.get_permissions(auth.is_logged()))
+
 
 #@app.route("/ajax/")
 #@logged_in_or_404

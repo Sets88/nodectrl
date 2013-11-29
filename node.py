@@ -4,7 +4,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, DateTime, Integer, String, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, reconstructor
-from settings import settings
+from settings import Settings
 import socket
 import struct
 from nodeoperations import NodeOperations
@@ -28,10 +28,10 @@ permissions = {"nodes_add_nodes": [],
 class NodesAPI(object):
 
     """Main programm API"""
-    def __init__(self, settings):
+    def __init__(self):
         self.db_engine = None
         self.session = None
-        self.db_connect(settings)
+        self.db_connect()
 
     def _ip_to_int(self, ipaddr):
         try:
@@ -40,13 +40,13 @@ class NodesAPI(object):
             return None
         return ip            
 
-    def db_connect(self, settings):
-        if settings['engine'] == "mysql":
+    def db_connect(self):
+        if Settings()['db']['engine'] == "mysql":
             self.db_engine = create_engine(
-                "mysql://%s:%s@%s:%s/%s?init_command=set names utf8" % (settings[
-                                                                        'user'], settings['password'], settings['host'], settings['port'], settings['db']), echo=True, convert_unicode=True, pool_recycle=7200)
-        elif settings['engine'] == "sqlite":
-            self.db_engine = create_engine("sqlite:///%s" % settings['db'], echo=True)
+                "mysql://%s:%s@%s:%s/%s?init_command=set names utf8" % (Settings()[
+                                                                        'user'], Settings()['db']['password'], Settings()['db']['host'], Settings()['db']['port'], Settings()['db']['db']), echo=True, convert_unicode=True, pool_recycle=7200)
+        elif Settings()['db']['engine'] == "sqlite":
+            self.db_engine = create_engine("sqlite:///%s" % Settings()['db']['db'], echo=True)
 
         Session.configure(bind=self.db_engine)
         self.session = Session()
@@ -124,7 +124,7 @@ class NodesAPI(object):
         return self.nodelist[0].child_list
 
     def scan_nodes(self, catid):
-        nodeop = NodeOperations(settings.get_nets(catid))
+        nodeop = NodeOperations(Settings().get_nets(catid))
         return nodeop.nmap_nets()
 
     def check_nodes(self, catid):
@@ -160,7 +160,7 @@ class NodesAPI(object):
         nodes = self.session.query(Node).filter(
             Node.catid.in_(catid)).order_by("port").all()
         self.nodelist = NodeList(nodes)
-        nodeop = NodeOperations(settings.get_nets(catid))
+        nodeop = NodeOperations(Settings().get_nets(catid))
         nodeop.nmap_nets()
 
         for node in self.nodelist[0].child_list:
@@ -176,7 +176,7 @@ class NodesAPI(object):
             Node.catid.in_(catid)).order_by("port").all()
         self.nodelist
         self.nodelist = NodeList(nodes)
-        nodeop = NodeOperations(settings.get_nets(catid))
+        nodeop = NodeOperations(Settings().get_nets(catid))
         res = nodeop.get_port_by_mac(self.nodelist[0].child_list, mac)
         if res:
             for node in res[0].child_list:
@@ -208,7 +208,7 @@ class NodesAPI(object):
         for node in nodes:
             ips.append(str(node.ipaddr))
 
-        for net in settings.get_nets(catid):
+        for net in Settings().get_nets(catid):
             comm_freeips = self.session.query(FreeIP).filter(FreeIP.ip.in_(map(lambda ip:self._ip_to_int(str(ip)),net[0].iterhosts()))).all()
             for ip in net[0].iterhosts():
                 if str(ip) not in ips:

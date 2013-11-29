@@ -35,6 +35,11 @@ class Settings(object):
         else:
             self.load(json.load(f))
 
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+             cls.instance = super(Settings, cls).__new__(cls)
+        return cls.instance
+
     def __getitem__(self, key):
         try:
             return self.options[key]
@@ -210,5 +215,3 @@ class Settings(object):
     def save(self):
         f = open(os.path.join(self.root_path, "settings.json"), "w")
         json.dump(self.options, f, indent=4)
-
-settings = Settings()
