@@ -37,7 +37,6 @@ class Settings(object):
         else:
             self.load(json.load(f))
         self.__initialized = True
-        print "\n\n INIT \n\n"
 
     def __new__(cls):
         if not hasattr(cls, 'instance'):
