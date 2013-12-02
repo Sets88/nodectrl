@@ -87,6 +87,25 @@ $(document).ready(function(){
 		return false;
 	});
 
+	$(document).on('click',".freeipapply", function()
+	{
+		var obj = $(this);
+		$.ajax({
+			url: '/ajax' + $(this).attr("href"),
+			dataType: "json",
+			success: function(json)
+			{
+
+				if (json.result=="0")
+				{
+					obj.parent().parent().remove();
+				}
+				else alert(json.result);
+			}
+		});
+		return false;
+	});
+
 	$(document).on('click',"#showipcalc", function()
 	{
 		var obj = $("#ipcalc");

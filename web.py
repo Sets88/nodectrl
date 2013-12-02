@@ -604,6 +604,23 @@ def ajax_freeip_edit(ipaddr):
     resp_dict['result'] = 0
     return jsonify(resp_dict)
 
+@app.route("/ajax/freeip/applycomment/<ipaddr>/", methods=["GET"])
+@logged_in_or_404
+@require_permission("nodes_show_ips")
+@require_permission("nodes_edit_nodes")
+def ajax_freeip_apply(ipaddr):
+    resp_dict = {}
+    freeip = sw_api.freeip_get_by_ip(ipaddr)
+    node = sw_api.get_by_ip(ipaddr)
+    if freeip and node:
+        node.comment = freeip.comment
+        sw_api.freeip_set_comment(ipaddr, "")
+        resp_dict['result'] = 0
+        sw_api.save_all()
+    else:
+        resp_dict['result'] = 1
+    return jsonify(resp_dict)
+
 @app.route("/ajax/nodes/")
 @login_required
 def nodes_ajax():

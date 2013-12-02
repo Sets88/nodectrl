@@ -36,6 +36,10 @@
 			</td>
 			<td>
 				<a class="freeipedit" href="/freeip/editcomment/{{ node.ipaddr }}/"><img src="/static/images/edit.png"></a>
+				{% if node.exists %}
+					<a href="/freeip/applycomment/{{ node.ipaddr }}/" class="btn btn-primary freeipapply">Применить<a>
+				{% endif %}
+
 			</td>
 		{% endif %}
 	</tr>
