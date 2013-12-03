@@ -265,6 +265,20 @@ def freeip_edit_comment(ipaddr):
             nodes = []
         return render_template("freeip.html", nodes=nodes, addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), act="editcomment", ip=ipaddr)
 
+@app.route("/freeip/applycomment/<ipaddr>/", methods=["GET"])
+@login_required
+@require_permission("nodes_show_ips")
+@require_permission("nodes_edit_nodes")
+def freeip_apply(ipaddr):
+    freeip = sw_api.freeip_get_by_ip(ipaddr)
+    node = sw_api.get_by_ip(ipaddr)
+    if freeip and node:
+        node.comment = freeip.comment
+        sw_api.freeip_set_comment(ipaddr, "")
+        sw_api.save_all()
+        return redirect("/freeip/")
+    else:
+        abort(404)
 
 # SETTINGS ##################
 
