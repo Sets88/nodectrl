@@ -302,7 +302,14 @@ $(document).ready(function(){
 			{
 				if (json.result=="0")
 				{
-					obj.parent().parent().html(json.comment)
+					if (json.exists == "1")
+					{
+						obj.parent().parent().parent().remove();
+					}
+					else
+					{
+						obj.parent().parent().html(json.comment);
+					}
 				}
 			}
 		});
