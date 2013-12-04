@@ -72,6 +72,7 @@ class NodesAPI(object):
     def save_all(self):
         try:
             self.session.flush()
+            self.session.expunge_all()
             self.session.commit()
         except:
             self.session.rollback()
