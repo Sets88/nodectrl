@@ -123,9 +123,15 @@ class NodesAPI(object):
         self.nodelist = NodeList(nodes)
         return self.nodelist[0].child_list
 
-    def scan_nodes(self, catid):
+    def scan_nodes(self, catid, node_list=None):
         nodeop = NodeOperations(Settings().get_nets(catid))
-        return nodeop.nmap_nets()
+        if not node_list:
+            return nodeop.nmap_nets()
+        else:
+            ip_list = []
+            for node in node_list:
+                ip_list.append(node.ipaddr)
+            return nodeop.nmap_ip_list(ip_list)
 
     def check_nodes(self, catid):
         nodes = self.session.query(Node).filter(
@@ -137,6 +143,31 @@ class NodesAPI(object):
             else:
                 node.status = 0
         self.save_all()
+
+    def check_tree(self, catid, node_id):
+        self.list_nodes(catid)
+        node_list = self.list_tree(self.nodelist[node_id])
+        alive = self.scan_nodes(catid, node_list)
+        result = {}
+        for node in node_list:
+            if node.ipaddr in alive:
+                node.status = 1
+                result[node.id] = 1
+            else:
+                node.status = 0
+                result[node.id] = 0
+        self.save_all()
+        return result
+
+    def list_tree(self, nodes):
+        if not isinstance(nodes, list):
+            nodes = [nodes]
+        nodelist  = []
+        for node in nodes:
+            if node.ip > 0:
+                nodelist.append(node)
+                nodelist.extend(self.list_tree(node.child_list))
+        return nodelist
 
     def autoadd_nodes(self, catid):
         nodes = self.session.query(Node).filter(
@@ -321,7 +352,10 @@ class NodeList(object):
                     self.nodes[0].child_list.append(node)
 
     def __getitem__(self, key):
-        return self.nodes[key]
+        try:
+            return self.nodes[key]
+        except IndexError:
+            return False
 
     def __iter__(self):
         return iter(self.nodes.values())
