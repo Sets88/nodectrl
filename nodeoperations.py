@@ -59,6 +59,23 @@ class NodeOperations(object):
                 ips.append(address)
         return ips
 
+    def nmap_ip_list(self, ip_list):
+        pipe = os.popen("nmap -n --min-parallelism 500 --min-rtt-timeout=200ms -sP -oX - %s" % " ".join(ip_list))
+        print "nmap -n --min-parallelism 500 --min-rtt-timeout=200ms -sP -oX - %s" % " ".join(ip_list)
+        out = pipe.read()
+        ecode = pipe.close()
+        if ecode:
+            return None
+        xml = minidom.parseString(out)
+        hosts = xml.getElementsByTagName("host")
+        ips = []
+        for host in hosts:
+            address = host.getElementsByTagName("address")[0].getAttribute("addr")
+            status = host.getElementsByTagName("status")[0].getAttribute("state")
+            if status == "up":
+                ips.append(address)
+        return ips
+
     def _find_port(self, childs, mac, vlan, ipaddr=None, port=0):
 
         if mac is None:

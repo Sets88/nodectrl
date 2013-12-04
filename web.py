@@ -198,6 +198,12 @@ def set_cat(catid):
         cookies["cat"] = catid
     return redirect("/")
 
+@app.route("/checknodes/<int:id>/")
+@login_required
+@require_permission("nodes_check_nodes")
+def check_nodes_by_id(id):
+    sw_api.check_tree(get_cat(), int(id))
+    return redirect("/")
 
 @app.route("/checknodes/")
 @login_required
@@ -652,6 +658,19 @@ def nodes_ajax():
     nodes = sw_api.list_nodes(get_cat())
     sw_api.close_session()
     return jsonify({"name": "root", "children": get_nodes(nodes)})
+
+@app.route("/ajax/checknodes/<int:id>/")
+@login_required
+@require_permission("nodes_check_nodes")
+def ajax_check_nodes_by_id(id):
+    resp_dict = {}
+    nodes = sw_api.check_tree(get_cat(), int(id))
+    if nodes:
+        resp_dict['result'] = '0'
+        resp_dict['nodes'] = nodes
+    else:
+        resp_dict['result'] = '1'
+    return jsonify(resp_dict)
 
 #    return render_template("nodes.html", nodes=nodes, addlinks=settings['addlinks'], cats=enumerate(settings['categories']), perms=settings.get_permissions(auth.is_logged()))
 

@@ -75,6 +75,10 @@
 				<a href="resetflag/{{ node.id }}/#{{ node.id }}" class="flag">
 					<img src="/static/images/alert.png"></a>
 				{% endif %}
+				{% if "nodes_check_nodes" in perms %}
+				<a href="checknodes/{{ node.id }}/#{{ node.id }}" class="check">
+					<img src="/static/images/web.png"></a>
+				{% endif %}
 				{% if "nodes_add_nodes" in perms %}
 				<a href="addnode/{{ node.id }}/#{{ node.id }}" class="add">
 					<img src="/static/images/add.png"></a>

@@ -149,6 +149,47 @@ $(document).ready(function(){
 		return false;
 	});
 
+	$(document).on('click',".ipgroup .check",function()
+	{
+		var obj = $(this);
+		obj.parent().parent().parent().fadeTo( 250, 0.25, function() {
+			$.getJSON('ajax/' + obj.attr("href"), {}, function(json)
+			{
+				if (json.result=="0")
+				{
+					parent = obj.parent().parent().parent()
+					for(node in json.nodes)
+					{
+						var curr = false
+						if (parent.attr('id') == node)
+						{
+							curr = parent.find("span")[0]
+						}
+						else
+						{
+							curr = parent.find("#" + node + " span")[0]
+						}
+						if (curr)
+						{
+							console.log(node+" "+json.nodes[node]+" "+curr)
+							if (json.nodes[node] == '1')
+							{
+								curr.className = 'normal-ip'
+							}
+							else
+							{
+								curr.className = 'label label-important'
+							}
+						}
+					}
+				}
+				else alert(json.result);
+				obj.parent().parent().parent().fadeTo( "slow", 1.0 );
+			});
+		});
+		return false;
+	});
+
 	$(document).on('click',".ipgroup .flag", function()
 	{
 		var obj = $(this);
