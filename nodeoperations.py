@@ -44,7 +44,7 @@ class NodeOperations(object):
         nets = []
         for net in self.nets:
             nets.append(str(net[0]))
-        pipe = os.popen("nmap -n --min-parallelism 500 --min-rtt-timeout=200ms -sP -oX - %s" % " ".join(nets))
+        pipe = os.popen("nmap -n --max-parallelism 500 --min-rtt-timeout=200ms -sP -oX - %s" % " ".join(nets))
         out = pipe.read()
         ecode = pipe.close()
         if ecode:
@@ -60,7 +60,7 @@ class NodeOperations(object):
         return ips
 
     def nmap_ip_list(self, ip_list):
-        pipe = os.popen("nmap -n --min-parallelism 500 --min-rtt-timeout=200ms -sP -oX - %s" % " ".join(ip_list))
+        pipe = os.popen("nmap -n --max-parallelism 500 --min-rtt-timeout=200ms -sP -oX - %s" % " ".join(ip_list))
         out = pipe.read()
         ecode = pipe.close()
         if ecode:
