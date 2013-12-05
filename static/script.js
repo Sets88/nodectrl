@@ -217,10 +217,21 @@ $(document).ready(function(){
 		return false;
 	});
 
-	$(document).on('click',".ipgroup .check",function()
+	$(document).on('click',".checkall,.ipgroup .check",function()
 	{
 		var obj = $(this);
-		obj.parent().parent().parent().fadeTo( 250, 0.25, function() {
+		var parent
+		console.log(obj.context.className);
+
+		if (obj.context.className == "checkall")
+		{
+			parent = $("#0");
+		}
+		else
+		{
+			parent = obj.parent().parent().parent()
+		}
+		parent.fadeTo( 250, 0.25, function() {
 			$.ajaxSetup({
   				"error":function() {   
     			show_notice("Connection error", "error");
@@ -230,7 +241,6 @@ $(document).ready(function(){
 			{
 				if (json.result=="0")
 				{
-					parent = obj.parent().parent().parent()
 					for(node in json.nodes)
 					{
 						var curr = false
@@ -259,7 +269,7 @@ $(document).ready(function(){
 				{
 					show_notice("Unknown error", "error");
 				}
-				obj.parent().parent().parent().fadeTo("slow", 1.0);
+				parent.fadeTo("slow", 1.0);
 			})
 		});
 		return false;

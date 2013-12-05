@@ -74,3 +74,13 @@ ul
 {
     color: #0088CC;
 }
+.hide 
+{
+    display:none
+}
+.error, .notice, .success {padding:.8em;margin-bottom:1em;border:1px solid #ddd; margin:2px; text-align:center; z-index:9000; position:absolute; width:271px;}
+.error {background:#FBE3E4;color:#8a1f11;border-color:#FBC2C4;}
+.notice {background:#FFF6BF;color:#514721;border-color:#FFD324;}
+.success {background:#E6EFC2;color:#264409;border-color:#C6D880;}
+.error a {color:#8a1f11;}
+.notice a {color:#514721;}

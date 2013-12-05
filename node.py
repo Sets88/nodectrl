@@ -147,7 +147,10 @@ class NodesAPI(object):
 
     def check_tree(self, catid, node_id):
         self.list_nodes(catid)
-        node_list = self.list_tree(self.nodelist[node_id])
+        if node_id == 0:
+            node_list = self.list_tree(self.nodelist[0].child_list)
+        else:
+            node_list = self.list_tree(self.nodelist[node_id])
         alive = self.scan_nodes(catid, node_list)
         result = {}
         for node in node_list:

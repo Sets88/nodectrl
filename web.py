@@ -209,7 +209,7 @@ def check_nodes_by_id(id):
 @login_required
 @require_permission("nodes_check_nodes")
 def check_nodes():
-    sw_api.check_nodes(get_cat())
+    sw_api.check_tree(get_cat(), 0)
     return redirect("/")
 
 
@@ -665,6 +665,19 @@ def nodes_ajax():
 def ajax_check_nodes_by_id(id):
     resp_dict = {}
     nodes = sw_api.check_tree(get_cat(), int(id))
+    if nodes:
+        resp_dict['result'] = '0'
+        resp_dict['nodes'] = nodes
+    else:
+        resp_dict['result'] = '1'
+    return jsonify(resp_dict)
+
+@app.route("/ajax/checknodes/")
+@login_required
+@require_permission("nodes_check_nodes")
+def ajax_check_nodes():
+    resp_dict = {}
+    nodes = sw_api.check_tree(get_cat(), 0)
     if nodes:
         resp_dict['result'] = '0'
         resp_dict['nodes'] = nodes
