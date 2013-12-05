@@ -391,7 +391,6 @@ $(document).ready(function(){
 						if (obj.parent().parent().hasClass("noip")) obj.parent().parent().removeClass("noip");
 						obj.parent().parent().addClass("withip");
 						obj.parent().parent().parent().append("<span class=\"label label-important\"><a class=\"linkb\" href=\"http://" + json.ip + "/\">" + json.comment + "</a></span> (<span class=\"ipaddr\">" + json.ip + "</span>)" + json.adminbut).hide().show("slow");
-							//"<span class=\"adminbut\"><a class=\"add\" href=\"addnode/" + json.id + "/\"><img src=\"static/images/add.png\"></a> <a class=\"edit\" href=\"editnode/" + json.id + "/\"><img src=\"static/images/edit.png\"></a> <a class=\"move\" href=\"movenode/" + json.id + "/\"><img src=\"static/images/move.png\"></a> <a class=\"del\" href=\"deletenode/" + json.id + "/\"><img src=\"static/images/delete.png\"></a> </span>").hide().show("slow");
 						obj.parent().parent().parent().parent().attr("id",json.id);
 						obj.parent().remove();
 					}
