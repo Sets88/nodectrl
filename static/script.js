@@ -235,7 +235,7 @@ $(document).ready(function(){
 			$.ajaxSetup({
   				"error":function() {   
     			show_notice("Connection error", "error");
-    			obj.parent().parent().parent().fadeTo("slow", 1.0);
+    			parent.fadeTo("slow", 1.0);
 			}});
 			$.getJSON('ajax/' + obj.attr("href"), {}, function(json)
 			{
