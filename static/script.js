@@ -1,3 +1,51 @@
+var timeout_link;
+jQuery.fn.centered_popup = function() {
+	if(window.devicePixelRatio !== undefined) 
+	{
+		dpr = window.devicePixelRatio;
+	} else 
+	{
+		dpr = 1;
+	}
+	if (this.attr("id") == "review") 
+	{
+		this.css('position', 'fixed');
+		this.css('top', '50%');
+		this.css('left', '50%');
+		this.css('margin-top','-223px');
+		this.css('margin-left','-151px');
+	}
+	else 
+	{
+		this.css('position', 'fixed');
+		this.css('top', '50%');
+		this.css('left','50%');
+		this.css('margin-top','-111px');
+		this.css('margin-left','-151px');
+	}
+}
+function show_notice(text, type, timeout)
+{
+	obj = $("#notice")
+	obj.slideUp(200);
+	clearTimeout(timeout_link);
+	function show_div()
+	{
+		obj.attr('class', type);
+		obj.centered_popup()
+		obj.html(text);
+		obj.slideDown(200);
+	}
+	function hide_div()
+	{
+		obj.slideUp(200);
+	}
+	timeout = typeof timeout !== 'undefined' ? timeout : 5000;
+	type = typeof type !== 'undefined' ? type : "notice";
+
+	show_div()
+	timeout_link = setTimeout(hide_div, timeout);
+}
 $(document).ready(function(){
 
 	$noip_hidden=true;
@@ -36,6 +84,10 @@ $(document).ready(function(){
 		$.ajax({
 			url: 'ajax/' + $(this).attr("href"),
 			dataType: "json",
+			error: function() 
+			{
+				show_notice("Connection error", "error");
+			},
 			success: function(json)
 			{
 
@@ -44,7 +96,7 @@ $(document).ready(function(){
 					obj.parent().parent().hide();
 					obj.parent().parent().html("<form action=\"" + "\" method=\"POST\" class=\"navbar-form\"><input name=\"comment\" class=\"noevent\" type=\"text\" value=\"" + json.comment + "\"><input name=\"ip\" type=\"text\" class=\"noevent\" value=\"" + json.ip + "\"><input name=\"port\" type=\"text\" class=\"noevent\" value=\"" + json.port + "\" style=\"width:40px;\"><input name=\"submit\" class=\"editbutton btn\" id=\"" + json.id + "\" type=\"submit\" value=\"Изменить\"></form>").fadeIn("slow");
 				}
-				else alert(json.result);
+				else show_notice("Unknown error", "error");
 			}
 		});
 		return false;
@@ -56,6 +108,10 @@ $(document).ready(function(){
 		$.ajax({
 			url: 'ajax/' + $(this).attr("href"),
 			dataType: "html",
+			error: function() 
+			{
+				show_notice("Connection error", "error");
+			},
 			success: function(json)
 			{
 				obj.parent().parent().hide("fast");
@@ -73,6 +129,10 @@ $(document).ready(function(){
 		$.ajax({
 			url: '/ajax' + $(this).attr("href"),
 			dataType: "json",
+			error: function() 
+			{
+				show_notice("Connection error", "error");
+			},
 			success: function(json)
 			{
 
@@ -81,7 +141,7 @@ $(document).ready(function(){
 					obj.parent().prev().hide();
 					obj.parent().prev().html("<form action=\"" + "\" method=\"POST\" class=\"navbar-form\"><input name=\"comment\" class=\"noevent\" type=\"text\" value=\"" + json.comment + "\"><input name=\"submit\" class=\"freeipeditbutton btn\" id=\"" + json.ipaddr + "\" type=\"submit\" value=\"Изменить\"></form>").fadeIn("slow");
 				}
-				else alert(json.result);
+				else show_notice("Unknown error", "error");
 			}
 		});
 		return false;
@@ -93,6 +153,10 @@ $(document).ready(function(){
 		$.ajax({
 			url: '/ajax' + $(this).attr("href"),
 			dataType: "json",
+			error: function() 
+			{
+				show_notice("Connection error", "error");
+			},
 			success: function(json)
 			{
 
@@ -100,7 +164,7 @@ $(document).ready(function(){
 				{
 					obj.parent().parent().remove();
 				}
-				else alert(json.result);
+				else show_notice("Unknown error", "error");
 			}
 		});
 		return false;
@@ -112,6 +176,10 @@ $(document).ready(function(){
 		$.ajax({
 			url: '/ajax/ipcalc',
 			dataType: "html",
+			error: function() 
+			{
+				show_notice("Connection error", "error");
+			},
 			success: function(json)
 			{
 				obj.html(json).fadeIn("slow");
@@ -143,7 +211,7 @@ $(document).ready(function(){
 				{
 					obj.parent().parent().parent().slideToggle(500).queue(function(next){obj.parent().parent().parent().remove()});
 				}
-				else alert(json.result);
+				else show_notice("Unknown error", "error");
 			});
 		}
 		return false;
@@ -153,6 +221,11 @@ $(document).ready(function(){
 	{
 		var obj = $(this);
 		obj.parent().parent().parent().fadeTo( 250, 0.25, function() {
+			$.ajaxSetup({
+  				"error":function() {   
+    			show_notice("Connection error", "error");
+    			obj.parent().parent().parent().fadeTo("slow", 1.0);
+			}});
 			$.getJSON('ajax/' + obj.attr("href"), {}, function(json)
 			{
 				if (json.result=="0")
@@ -171,7 +244,6 @@ $(document).ready(function(){
 						}
 						if (curr)
 						{
-							console.log(node+" "+json.nodes[node]+" "+curr)
 							if (json.nodes[node] == '1')
 							{
 								curr.className = 'normal-ip'
@@ -183,9 +255,12 @@ $(document).ready(function(){
 						}
 					}
 				}
-				else alert(json.result);
-				obj.parent().parent().parent().fadeTo( "slow", 1.0 );
-			});
+				else
+				{
+					show_notice("Unknown error", "error");
+				}
+				obj.parent().parent().parent().fadeTo("slow", 1.0);
+			})
 		});
 		return false;
 	});
@@ -196,6 +271,10 @@ $(document).ready(function(){
 		$.ajax({
 			url: 'ajax/' + $(this).attr("href"),
 			dataType: "json",
+			error: function() 
+			{
+				show_notice("Connection error", "error");
+			},
 			success: function(json)
 			{
 				if (json.result=="0")
@@ -224,6 +303,10 @@ $(document).ready(function(){
 			dataType: "json",
 			data: dataString,
 			cache: false,
+			error: function() 
+			{
+				show_notice("Connection error", "error");
+			},
 			success: function(json)
 			{
 				if (json.result=="0")
@@ -246,7 +329,7 @@ $(document).ready(function(){
 						obj.parent().remove();
 					}
 				}
-				else alert(json.result);
+				else show_notice("Unknown error", "error");
 			}
 		});
 		return false;
@@ -267,6 +350,10 @@ $(document).ready(function(){
 			dataType: "json",
 			data: dataString,
 			cache: false,
+			error: function() 
+			{
+				show_notice("Connection error", "error");
+			},
 			success: function(json)
 			{
 				if (json.result=="0")
@@ -297,7 +384,7 @@ $(document).ready(function(){
 						obj.parent().remove();
 					}
 				}
-				else alert(json.result);
+				else show_notice("Unknown error", "error");
 			}
 		});
 		return false;
@@ -314,6 +401,10 @@ $(document).ready(function(){
 			dataType: "json",
 			data: dataString,
 			cache: false,
+			error: function() 
+			{
+				show_notice("Connection error", "error");
+			},
 			success: function(json)
 			{
 				if (json.result=="0")
@@ -322,7 +413,7 @@ $(document).ready(function(){
 					$("#"+json.id+".ipgroup div").show("slow");
 					$("#"+json.id+".ipgroup").appendTo("#"+json.parent+".ipgroup ul:eq(0)");
 				}
-				else alert(json.result);
+				else show_notice("Unknown error", "error");
 			}
 		});
 		return false;
@@ -339,6 +430,10 @@ $(document).ready(function(){
 			dataType: "json",
 			data: dataString,
 			cache: false,
+			error: function() 
+			{
+				show_notice("Connection error", "error");
+			},
 			success: function(json)
 			{
 				if (json.result=="0")
@@ -383,6 +478,10 @@ $(document).ready(function(){
 			$.ajax({
 				url: 'ajax/getswitchbymac/' + $(this).attr("value")+"/",
 				dataType: "json",
+				error: function() 
+				{
+					show_notice("Connection error", "error");
+				},
 				success: function(json)
 				{
 					if (json.result=="0")
