@@ -1,0 +1,28 @@
+			<span class="adminbut">
+				{% if node.ip %}
+					{% if node.flag %}
+					<a href="resetflag/{{ node.id }}/#{{ node.id }}" class="flag">
+						<img src="/static/images/alert.png"></a>
+					{% endif %}
+					{% if "nodes_check_nodes" in perms %}
+					<a href="checknodes/{{ node.id }}/#{{ node.id }}" class="check">
+						<img src="/static/images/web.png"></a>
+					{% endif %}
+				{% endif %}
+				{% if "nodes_add_nodes" in perms %}
+				<a href="addnode/{{ node.id }}/#{{ node.id }}" class="add">
+					<img src="/static/images/add.png"></a>
+				{% endif %}
+				{% if "nodes_edit_nodes" in perms %}
+				<a href="editnode/{{ node.id }}/#{{ node.id }}" class="edit">
+					<img src="/static/images/edit.png"></a>
+				{% endif %}
+				{% if "nodes_move_nodes" in perms %}
+				<a href="movenode/{{ node.id }}/" class="move">
+					<img src="/static/images/move.png"></a>
+				{% endif %}
+				{% if "nodes_delete_nodes" in perms %}
+				<a href="deletenode/{{ node.id }}/" class="del" >
+					<img src="/static/images/delete.png"></a>
+				{% endif %}
+			</span>

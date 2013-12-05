@@ -327,7 +327,7 @@ $(document).ready(function(){
 						if (obj.prev().attr("value")!="100") port="<small>" + obj.prev().attr("value") + "</small> ";
 						if (obj.parent().parent().hasClass("withip")) obj.parent().parent().removeClass("withip");
 						obj.parent().parent().addClass("noip");
-						obj.parent().parent().append( port + obj.prev().prev().prev().attr("value") + "<span class=\"adminbut\"><a class=\"add\" href=\"?act=addnode&id=" + obj.attr("id") + "\"><img src=\"images/add.png\"></a><a class=\"edit\" href=\"?act=editnode&id=" + obj.attr("id") + "\"><img src=\"images/edit.png\"></a><a class=\"move\" href=\"?act=movenode&id=" + obj.attr("id") + "\"><img src=\"images/move.png\"></a><a class=\"del\" href=\"?act=deletenode&id=" + obj.attr("id") + "\"><img src=\"images/delete.png\"></a></span>").hide().show("slow");
+						obj.parent().parent().append( port + obj.prev().prev().prev().attr("value") + json.adminbut).hide().show("slow")
 						obj.parent().remove();
 					}
 					else  
@@ -335,7 +335,8 @@ $(document).ready(function(){
 						if (obj.prev().attr("value")!="0") port="<small>" + obj.prev().attr("value") + "</small> ";
 						if (obj.parent().parent().hasClass("noip")) obj.parent().parent().removeClass("noip");
 						obj.parent().parent().addClass("withip");
-						obj.parent().parent().append("<span class=\"label label-important\">" + port + "<a class=\"linkb\" href=\"http://" + obj.prev().prev().attr("value") + "/\">" + obj.prev().prev().prev().attr("value") + "</a></span> (<span class=\"ipaddr\">" + obj.prev().prev().attr("value") + "</span>)" + "<span class=\"adminbut\"><a class=\"add\" href=\"addnode/" + obj.attr("id") + "/\"><img src=\"static/images/add.png\"></a> <a class=\"edit\" href=\"editnode/" + obj.attr("id") + "/\"><img src=\"static/images/edit.png\"></a> <a class=\"move\" href=\"movenode/" + obj.attr("id") + "/\"><img src=\"static/images/move.png\"></a> <a class=\"del\" href=\"deletenode/" + obj.attr("id") + "/\"><img src=\"static/images/delete.png\"></a> </span>").hide().show("slow");
+						obj.parent().parent().append("<span class=\"label label-important\">" + port + "<a class=\"linkb\" href=\"http://" + obj.prev().prev().attr("value") + "/\">" + obj.prev().prev().prev().attr("value") + "</a></span> (<span class=\"ipaddr\">" + obj.prev().prev().attr("value") + "</span>)" + json.adminbut).hide().show("slow");
+
 						obj.parent().remove();
 					}
 				}
@@ -373,7 +374,7 @@ $(document).ready(function(){
 						if (obj.parent().parent().hasClass("withip")) obj.parent().parent().parent().removeClass("withip");
 						obj.parent().parent().parent().attr("id", json.id).append("<ul></ul>")
 						obj.parent().parent().addClass("noip");
-						obj.parent().parent().append( json.comment +"<span class=\"adminbut\"><a class=\"add\" href=\"addnode/" + json.id + "/\"><img src=\"static/images/add.png\"></a> <a class=\"edit\" href=\"editnode/" + json.id + "/\"><img src=\"static/images/edit.png\"></a> <a class=\"move\" href=\"movenode/" + json.id + "/\"><img src=\"static/images/move.png\"></a> <a class=\"del\" href=\"deletenode/" + json.id + "/\"><img src=\"static/images/delete.png\"></a></span>").hide().show("slow");
+						obj.parent().parent().append( json.comment + json.adminbut).hide().show("slow");
 						if (obj.parent().attr("id")=="addtoroot")
 						{
 							$("#0.ipgroup ul:eq(0)").append("<div class=\"ipgroup\"><div id=\"new\"></div>");
@@ -389,7 +390,8 @@ $(document).ready(function(){
 					{
 						if (obj.parent().parent().hasClass("noip")) obj.parent().parent().removeClass("noip");
 						obj.parent().parent().addClass("withip");
-						obj.parent().parent().parent().append("<span class=\"label label-important\"><a class=\"linkb\" href=\"http://" + json.ip + "/\">" + json.comment + "</a></span> (<span class=\"ipaddr\">" + json.ip + "</span>)" + "<span class=\"adminbut\"><a class=\"add\" href=\"addnode/" + json.id + "/\"><img src=\"static/images/add.png\"></a> <a class=\"edit\" href=\"editnode/" + json.id + "/\"><img src=\"static/images/edit.png\"></a> <a class=\"move\" href=\"movenode/" + json.id + "/\"><img src=\"static/images/move.png\"></a> <a class=\"del\" href=\"deletenode/" + json.id + "/\"><img src=\"static/images/delete.png\"></a> </span>").hide().show("slow");
+						obj.parent().parent().parent().append("<span class=\"label label-important\"><a class=\"linkb\" href=\"http://" + json.ip + "/\">" + json.comment + "</a></span> (<span class=\"ipaddr\">" + json.ip + "</span>)" + json.adminbut).hide().show("slow");
+							//"<span class=\"adminbut\"><a class=\"add\" href=\"addnode/" + json.id + "/\"><img src=\"static/images/add.png\"></a> <a class=\"edit\" href=\"editnode/" + json.id + "/\"><img src=\"static/images/edit.png\"></a> <a class=\"move\" href=\"movenode/" + json.id + "/\"><img src=\"static/images/move.png\"></a> <a class=\"del\" href=\"deletenode/" + json.id + "/\"><img src=\"static/images/delete.png\"></a> </span>").hide().show("slow");
 						obj.parent().parent().parent().parent().attr("id",json.id);
 						obj.parent().remove();
 					}

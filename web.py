@@ -493,6 +493,7 @@ def ajax_edit_node(id):
         node.set_ip(request.form['ip'])
         sw_api.save_all()
         resp_dict['result'] = 0
+        resp_dict['adminbut'] = render_template("adminbut.html", node=node, perms=Settings().get_permissions(auth.is_logged()))
         return jsonify(resp_dict)
     resp_dict['comment'] = node.comment.replace('"', "&quot;")
     resp_dict['ip'] = node.ipaddr
@@ -521,6 +522,7 @@ def ajax_add_node(id):
         resp_dict['id'] = node.id
         resp_dict['ip'] = node.ipaddr
         resp_dict['result'] = 0
+        resp_dict['adminbut'] = render_template("adminbut.html", node=node, perms=Settings().get_permissions(auth.is_logged()))
 
         sw_api.save_all()
 
