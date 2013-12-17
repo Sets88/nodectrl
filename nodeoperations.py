@@ -75,7 +75,7 @@ class NodeOperations(object):
                 ips.append(address)
         return ips
 
-    def snmp_node(self, ipaddr, mac, vlan="1", oid="1.3.6.1.2.1.17.7.1.2.2.1.2")
+    def snmp_node(self, ipaddr, mac, vlan="1", oid="1.3.6.1.2.1.17.7.1.2.2.1.2"):
         oid =  ".%s.%s.%s" % (oid, vlan, self.mac2dec(mac))
         res = netsnmp.snmpget(oid, DestHost=ipaddr, Version=1, Community="public")
         return res
