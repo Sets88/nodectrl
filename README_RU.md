@@ -54,11 +54,11 @@ vasya, root, admin
 1. Заходим в Свич -> Настройки
 2. Находим поле "Сгенерировать хэш..." Вписываем туда IP адрес машины которая должна иметь доступ к установке флагами
 3. Жмем генерировать
-4. Теперь мы получили хэш, копируем его
+4. Теперь мы получили токен, копируем его
 
 URL будет такой формы:
 
-	http://nashnodectrl:port/api/setflag/{IP}/{Status}/{HASH}/
+	http://nashnodectrl:port/api/setflag/{IP}/{Status}/{TOKEN}/
 
 Например:
 
@@ -72,7 +72,7 @@ URL будет такой формы:
 
 URL будет такой формы:
 
-	http://nashnodectrl:port/api/getnodebymac/{MAC}/{HASH}/
+	http://nashnodectrl:port/api/getnodebymac/{MAC}/{TOKEN}/
 
 Например:
 
