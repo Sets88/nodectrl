@@ -220,7 +220,7 @@ class Settings(object):
 
 
     def set_language(self, language):
-        if os.path.exists(os.path.join("translations", language, "LC_MESSAGES", "nodectrl.mo")):
+        if os.path.exists(os.path.join(self.root_path, "translations", language, "LC_MESSAGES", "nodectrl.mo")):
             self.options['language'] = language
 
     def save(self):
