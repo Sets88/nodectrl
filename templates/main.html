@@ -7,9 +7,9 @@
 	<script type='text/javascript' src='/static/jquery.js'></script>
 	<script type='text/javascript' src='/static/chosen.jquery.js'></script>
 	<script type='text/javascript' src='/static/bootstrap/js/bootstrap.min.js'></script>
-	<script type='text/javascript' src='/static/script.js'></script>
+	<script type='text/javascript' src='/script.js'></script>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<title>switch</title>
+	<title>NodeCTRL</title>
 </head>
 <body>
 	<div class="navbar navbar-inverse navbar-fixed-top">
@@ -19,34 +19,34 @@
 					<li class="dropdown">
 						<ul class="dropdown-menu" style="display: block; position: static; margin-bottom: 5px; *width: 180px;" aria-labelledby="dropdownMenu" role="menu">
 							<li class="dropdown-submenu">
-							<a href="/">Свич</a>
+							<a href="/">{{ _('Switch') }}</a>
 								<ul class="dropdown-menu">
 									{% if "nodes_check_nodes" in perms %}
 									<li>
-										<a href="checknodes/" class="checkall" tabindex="-1">Проверить</a>
+										<a href="checknodes/" class="checkall" tabindex="-1">{{ _('Check nodes') }}</a>
 									</li>
 									{% endif %}
 									{% if "nodes_autoadd_nodes" in perms %}
 									<li>
-										<a href="/autoaddnodes/" tabindex="-1">Автодобавление</a>
+										<a href="/autoaddnodes/" tabindex="-1">{{ _('Autoadd nodes') }}</a>
 									</li>
 									{% endif %}
 									{% if "nodes_automove_nodes" in perms %}
 									<li>
-										<a href="/automovenodes/" tabindex="-1">Переместить свичи</a>
+										<a href="/automovenodes/" tabindex="-1">{{ _('Move nodes') }}</a>
 									</li>
 									{% endif %}
 									{% if "nodes_reset_flags" in perms %}
 									<li>
-										<a href="/resetflags/" tabindex="-1">Очистить уведомления</a>
+										<a href="/resetflags/" tabindex="-1">{{ _('Clear flags') }}</a>
 									</li>
 									{% endif %}
 									<li>
-										<a href="#" id="showall" onClick="hide();return false;">Показать без IP</a>
+										<a href="#" id="showall" onClick="hide();return false;">{{ _('Show with no IP') }}</a>
 									</li>
 									{% if "settings_edit" in perms %}
 									<li>
-										<a href="/settings/" >Настройки</a>
+										<a href="/settings/" >{{ _('Settings') }}</a>
 									</li>
 									{% endif %}
 								</ul>
@@ -56,7 +56,7 @@
 					<li class="dropdown">
 						<ul class="dropdown-menu" style="display: block; position: static; margin-bottom: 5px; *width: 180px;" aria-labelledby="dropdownMenu" role="menu">
 							<li class="dropdown-submenu">
-								<a href="#">Категория</a>
+								<a href="#">{{ _('Category') }}</a>
 								<ul class="dropdown-menu">
 									{% for cat in cats %}
 										<li>
@@ -65,7 +65,7 @@
 									{% endfor %}
 									{% if "nodes_show_ips" in perms %}
 									<li>
-										<a href="/freeip/">Свободные IP</a>
+										<a href="/freeip/">{{ _('Free IP') }}</a>
 									</li>
 									{% endif %}
 								</ul>
@@ -81,7 +81,7 @@
 							</div>
 						</li>
 						<li>
-							<a id="showipcalc" href="#">IP Калькулятор</a>
+							<a id="showipcalc" href="#">{{ _('IP Calculator') }}</a>
 						</li>
 						{% for item in addlinks %}
 						<li>
@@ -89,7 +89,7 @@
 						</li>
 						{% endfor %}
 						<li>
-							<a href="/logout/">Выход</a>
+							<a href="/logout/">{{ _('Logout') }}</a>
 						</li>
 					</ul>
 				</div>
@@ -97,10 +97,7 @@
 		</div>
 
 	</div>
-	<a href="/free/">Свободные IP</a>
-	&nbsp;&nbsp;
-	<br>
-	<br><br>
+	<br><br><br>
 {% block nodes %}
 {% endblock %}
 <body></html>

@@ -3,7 +3,7 @@
 <table>
 	<tr>
 		<td>
-			Фильтр по IP:
+			{{ _('Filter by IP') }}:
 		</td>
 	</tr>
 	<tr>
@@ -37,7 +37,7 @@
 			<td>
 				<a class="freeipedit" href="/freeip/editcomment/{{ node.ipaddr }}/"><img src="/static/images/edit.png"></a>
 				{% if node.exists %}
-					<a href="/freeip/applycomment/{{ node.ipaddr }}/" class="btn btn-primary freeipapply">Применить<a>
+					<a href="/freeip/applycomment/{{ node.ipaddr }}/" class="btn btn-primary freeipapply">{{ _('Apply') }}<a>
 				{% endif %}
 
 			</td>

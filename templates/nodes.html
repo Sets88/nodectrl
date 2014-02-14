@@ -4,10 +4,10 @@
 <table>
 	<tr>
 		<td>
-			Фильтр по имени:
+			{{ _('Filter by name') }}:
 		</td>
 		<td>
-			Фильтр по MAC
+			{{ _('Filter by MAC') }}
 		</td>
 	</tr>
 	<tr>
@@ -29,7 +29,7 @@
 				<input type="text" value="{{ node.comment }}" name="comment" id="{{ node.id }}">
 				<input type="text" value="{{ node.ipaddr }}" name="ip">
 				<input type="text" style="width:40px;" value="{{ node.port }}" name="port">
-				<input type="submit" value="Изменить" name="submit">
+				<input type="submit" value="{{ _('Change') }}" name="submit">
 				<span class="adminbut"></span>
 			</form>
 		</div>
@@ -79,7 +79,7 @@
 		{% if act == "add" and id == node.id %}
 			<form action="/addnode/{{ node.id }}/" method="POST" class="navbar-form">
 				<input name="comment" class="noevent" value="" type="text">
-				<input name="submit" class="addbutton btn" id="{{ node.id }}" value="Добавить" type="submit">
+				<input name="submit" class="addbutton btn" id="{{ node.id }}" value="{{ _('Add') }}" type="submit">
 			</form>
 		{% endif %}
 	{% if node.child_list %}
@@ -94,7 +94,7 @@
 		<div class="">
 			<form action="/addnode/0/" method="POST" class="navbar-form" id="addtoroot">
 				<input name="comment" class="noevent" value="" type="text">
-				<input name="submit" class="addbutton btn" id="0" value="Добавить" type="submit">
+				<input name="submit" class="addbutton btn" id="0" value="{{ _('Add') }}" type="submit">
 			</form>
 		</div>
 	</div>

@@ -23,6 +23,7 @@ class Settings(object):
                "categories": [
                    ["Default", [("192.168.1.0/24", "1")]]
                ],
+               "language": "en",
                "addlinks": {},
                "permissions": permissions
                }
@@ -158,6 +159,8 @@ class Settings(object):
                 self.set_categories(data['categories'])
             if "permissions" in data:
                 self.init_permissions(data['permissions'])
+            if "language" in data:
+                self.set_language(data['language'])
 
     def init_permissions(self, permissions):
         for perm in permissions.items():
@@ -211,12 +214,14 @@ class Settings(object):
             if not self._check_user_exists(user):
                 users.pop(users.index(user))
         if users == ['']:
-            settings['permissions'][permission] = []
+            self.options['permissions'][permission] = []
         else:
-            settings['permissions'][permission] = users
+            self.options['permissions'][permission] = users
 
 
-
+    def set_language(self, language):
+        if os.path.exists(os.path.join("translations", language, "LC_MESSAGES", "nodectrl.mo")):
+            self.options['language'] = language
 
     def save(self):
         f = open(os.path.join(self.root_path, "settings.json"), "w")

@@ -3,6 +3,16 @@ from flask import make_response
 from flask import request, redirect
 from flask import flash, url_for
 from hashlib import sha512, sha1
+from settings import Settings
+import gettext
+import os
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+try:
+    translation = gettext.translation('nodectrl', os.path.join(current_dir, 'translations'), languages=[Settings()['language']])
+except (IOError):
+    translation = gettext.translation('nodectrl', os.path.join(current_dir, 'translations'), languages=["en"])
 
 
 class Auth(object):
@@ -33,7 +43,7 @@ class Auth(object):
             return response
 
         else:
-            return render_template("auth.html")
+            return render_template("auth.html", _=translation.ugettext)
 
     def do_logout(self):
         response = make_response(redirect("login/"))

@@ -1,6 +1,6 @@
 <form class="navbar-form" method="POST" action="/movenode/{{node.id}}/">
 	<select name="parent" class="chzn-select" style="width:80%">
-	<option value="0" {% if node.parent_id == 0 %}selected{% endif %}>Корень</option>
+	<option value="0" {% if node.parent_id == 0 %}selected{% endif %}>{{ _('Root') }}</option>
 	{% for node1 in nodes recursive %}
 		{% if node1.ip and node.id != node1.id %}
 			<option value="{{ node1.id }}" {% if node.parent_id == node1.id %}selected{% endif %}>
@@ -12,6 +12,6 @@
 		{% endif %}
 	{% endfor %}
 	</select>
-	<input type="submit" class="movebutton" id={{node.id}} value="Переместить" name="submit">
+	<input type="submit" class="movebutton" id={{node.id}} value="{{ _('Move') }}" name="submit">
 	<span class="adminbut"></span>
 </form>
