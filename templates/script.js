@@ -26,12 +26,12 @@ jQuery.fn.centered_popup = function() {
 }
 function show_notice(text, type, timeout)
 {
-	obj = $("#notice")
+	obj = $("#notice");
 	obj.slideUp(200);
 	clearTimeout(timeout_link);
 	function show_div()
 	{
-		obj.attr('class', type);
+		obj.attr('class', "alert alert-dismissable alert-" + type);
 		obj.centered_popup()
 		obj.html(text);
 		obj.slideDown(200);
@@ -43,7 +43,7 @@ function show_notice(text, type, timeout)
 	timeout = typeof timeout !== 'undefined' ? timeout : 5000;
 	type = typeof type !== 'undefined' ? type : "notice";
 
-	show_div()
+	show_div();
 	timeout_link = setTimeout(hide_div, timeout);
 }
 $(document).ready(function(){
@@ -55,7 +55,7 @@ $(document).ready(function(){
 	$(document).on('click',".ipgroup .linkb",function()
 	{
 		window.open($(this).attr("href"));
-		return false
+		return false;
 	});
 	$("#showall").click(function()
 	{
@@ -69,7 +69,7 @@ $(document).ready(function(){
 			$(".ipgroup .noip:gt(0)").hide();
 			$noip_hidden=true;
 		}
-		return false
+		return false;
 	});
 	$(".ipgroup .link").click(function()
 	{
@@ -86,7 +86,7 @@ $(document).ready(function(){
 			dataType: "json",
 			error: function() 
 			{
-				show_notice("Connection error", "error");
+				show_notice("Connection error", "danger");
 			},
 			success: function(json)
 			{
@@ -96,7 +96,7 @@ $(document).ready(function(){
 					obj.parent().parent().hide();
 					obj.parent().parent().html("<form action=\"" + "\" method=\"POST\" class=\"navbar-form\"><input name=\"comment\" class=\"noevent\" type=\"text\" value=\"" + json.comment + "\"><input name=\"ip\" type=\"text\" class=\"noevent\" value=\"" + json.ip + "\"><input name=\"port\" type=\"text\" class=\"noevent\" value=\"" + json.port + "\" style=\"width:40px;\"><input name=\"submit\" class=\"editbutton btn\" id=\"" + json.id + "\" type=\"submit\" value=\"{{ _('Change') }}\"></form>").fadeIn("slow");
 				}
-				else show_notice("Unknown error", "error");
+				else show_notice("Unknown error", "danger");
 			}
 		});
 		return false;
@@ -110,7 +110,7 @@ $(document).ready(function(){
 			dataType: "html",
 			error: function() 
 			{
-				show_notice("Connection error", "error");
+				show_notice("Connection error", "danger");
 			},
 			success: function(json)
 			{
@@ -131,7 +131,7 @@ $(document).ready(function(){
 			dataType: "json",
 			error: function() 
 			{
-				show_notice("Connection error", "error");
+				show_notice("Connection error", "danger");
 			},
 			success: function(json)
 			{
@@ -141,7 +141,7 @@ $(document).ready(function(){
 					obj.parent().prev().hide();
 					obj.parent().prev().html("<form action=\"" + "\" method=\"POST\" class=\"navbar-form\"><input name=\"comment\" class=\"noevent\" type=\"text\" value=\"" + json.comment + "\"><input name=\"submit\" class=\"freeipeditbutton btn\" id=\"" + json.ipaddr + "\" type=\"submit\" value=\"{{ _('Save') }}\"></form>").fadeIn("slow");
 				}
-				else show_notice("Unknown error", "error");
+				else show_notice("Unknown error", "danger");
 			}
 		});
 		return false;
@@ -155,7 +155,7 @@ $(document).ready(function(){
 			dataType: "json",
 			error: function() 
 			{
-				show_notice("Connection error", "error");
+				show_notice("Connection error", "danger");
 			},
 			success: function(json)
 			{
@@ -164,7 +164,7 @@ $(document).ready(function(){
 				{
 					obj.parent().parent().remove();
 				}
-				else show_notice("Unknown error", "error");
+				else show_notice("Unknown error", "danger");
 			}
 		});
 		return false;
@@ -178,7 +178,7 @@ $(document).ready(function(){
 			dataType: "html",
 			error: function() 
 			{
-				show_notice("Connection error", "error");
+				show_notice("Connection error", "danger");
 			},
 			success: function(json)
 			{
@@ -211,7 +211,7 @@ $(document).ready(function(){
 				{
 					obj.parent().parent().parent().slideToggle(500).queue(function(next){obj.parent().parent().parent().remove()});
 				}
-				else show_notice("Unknown error", "error");
+				else show_notice("Unknown error", "danger");
 			});
 		}
 		return false;
@@ -220,7 +220,7 @@ $(document).ready(function(){
 	$(document).on('click',".checkall,.ipgroup .check",function()
 	{
 		var obj = $(this);
-		var parent
+		var parent;
 		console.log(obj.context.className);
 
 		if (obj.context.className == "checkall")
@@ -229,12 +229,12 @@ $(document).ready(function(){
 		}
 		else
 		{
-			parent = obj.parent().parent().parent()
+			parent = obj.parent().parent().parent();
 		}
 		parent.fadeTo( 250, 0.25, function() {
 			$.ajaxSetup({
   				"error":function() {   
-    			show_notice("Connection error", "error");
+    			show_notice("Connection error", "danger");
     			parent.fadeTo("slow", 1.0);
 			}});
 			$.getJSON('ajax/' + obj.attr("href"), {}, function(json)
@@ -243,31 +243,31 @@ $(document).ready(function(){
 				{
 					for(node in json.nodes)
 					{
-						var curr = false
+						var curr = false;
 						if (parent.attr('id') == node)
 						{
-							curr = parent.find("span")[0]
+							curr = parent.find("span")[0];
 						}
 						else
 						{
-							curr = parent.find("#" + node + " span")[0]
+							curr = parent.find("#" + node + " span")[0];
 						}
 						if (curr)
 						{
 							if (json.nodes[node] == '1')
 							{
-								curr.className = 'normal-ip'
+								curr.className = 'normal-ip';
 							}
 							else
 							{
-								curr.className = 'label label-danger'
+								curr.className = 'label label-danger';
 							}
 						}
 					}
 				}
 				else
 				{
-					show_notice("Unknown error", "error");
+					show_notice("Unknown error", "danger");
 				}
 				parent.fadeTo("slow", 1.0);
 			})
@@ -283,7 +283,7 @@ $(document).ready(function(){
 			dataType: "json",
 			error: function() 
 			{
-				show_notice("Connection error", "error");
+				show_notice("Connection error", "danger");
 			},
 			success: function(json)
 			{
@@ -315,7 +315,7 @@ $(document).ready(function(){
 			cache: false,
 			error: function() 
 			{
-				show_notice("Connection error", "error");
+				show_notice("Connection error", "danger");
 			},
 			success: function(json)
 			{
@@ -327,7 +327,7 @@ $(document).ready(function(){
 						if (obj.prev().attr("value")!="100") port="<small>" + obj.prev().attr("value") + "</small> ";
 						if (obj.parent().parent().hasClass("withip")) obj.parent().parent().removeClass("withip");
 						obj.parent().parent().addClass("noip");
-						obj.parent().parent().append( port + obj.prev().prev().prev().attr("value") + json.adminbut).hide().show("slow")
+						obj.parent().parent().append( port + obj.prev().prev().prev().attr("value") + json.adminbut).hide().show("slow");
 						obj.parent().remove();
 					}
 					else  
@@ -340,7 +340,7 @@ $(document).ready(function(){
 						obj.parent().remove();
 					}
 				}
-				else show_notice("Unknown error", "error");
+				else show_notice("Unknown error", "danger");
 			}
 		});
 		return false;
@@ -363,7 +363,7 @@ $(document).ready(function(){
 			cache: false,
 			error: function() 
 			{
-				show_notice("Connection error", "error");
+				show_notice("Connection error", "danger");
 			},
 			success: function(json)
 			{
@@ -372,7 +372,7 @@ $(document).ready(function(){
 					if (json.ip=="0.0.0.0" || json.ip=="")
 					{
 						if (obj.parent().parent().hasClass("withip")) obj.parent().parent().parent().removeClass("withip");
-						obj.parent().parent().parent().attr("id", json.id).append("<ul></ul>")
+						obj.parent().parent().parent().attr("id", json.id).append("<ul></ul>");
 						obj.parent().parent().addClass("noip");
 						obj.parent().parent().append( json.comment + json.adminbut).hide().show("slow");
 						if (obj.parent().attr("id")=="addtoroot")
@@ -395,7 +395,7 @@ $(document).ready(function(){
 						obj.parent().remove();
 					}
 				}
-				else show_notice("Unknown error", "error");
+				else show_notice("Unknown error", "danger");
 			}
 		});
 		return false;
@@ -414,7 +414,7 @@ $(document).ready(function(){
 			cache: false,
 			error: function() 
 			{
-				show_notice("Connection error", "error");
+				show_notice("Connection error", "danger");
 			},
 			success: function(json)
 			{
@@ -424,7 +424,7 @@ $(document).ready(function(){
 					$("#"+json.id+".ipgroup div").show("slow");
 					$("#"+json.id+".ipgroup").appendTo("#"+json.parent+".ipgroup ul:eq(0)");
 				}
-				else show_notice("Unknown error", "error");
+				else show_notice("Unknown error", "danger");
 			}
 		});
 		return false;
@@ -443,7 +443,7 @@ $(document).ready(function(){
 			cache: false,
 			error: function() 
 			{
-				show_notice("Connection error", "error");
+				show_notice("Connection error", "danger");
 			},
 			success: function(json)
 			{
@@ -482,7 +482,7 @@ $(document).ready(function(){
 	});
 	$(document).on('keyup',".srch2",function()
 	{
-		var nameofswitch=""
+		var nameofswitch="";
 		var obj = $(this);
 		if ($(this).attr("value").length==17)
 		{
@@ -491,7 +491,7 @@ $(document).ready(function(){
 				dataType: "json",
 				error: function() 
 				{
-					show_notice("Connection error", "error");
+					show_notice("Connection error", "danger");
 				},
 				success: function(json)
 				{
