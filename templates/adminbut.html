@@ -6,23 +6,23 @@
 					{% endif %}
 					{% if "nodes_check_nodes" in perms %}
 					<a href="checknodes/{{ node.id }}/#{{ node.id }}" class="check">
-						<img src="/static/images/web.png"></a>
+						<icon class="glyphicon glyphicon-repeat text-success"></a>
 					{% endif %}
 				{% endif %}
 				{% if "nodes_add_nodes" in perms %}
 				<a href="addnode/{{ node.id }}/#{{ node.id }}" class="add">
-					<img src="/static/images/add.png"></a>
+					<icon class="glyphicon glyphicon-plus"></a>
 				{% endif %}
 				{% if "nodes_edit_nodes" in perms %}
 				<a href="editnode/{{ node.id }}/#{{ node.id }}" class="edit">
-					<img src="/static/images/edit.png"></a>
+					<icon class="glyphicon glyphicon-pencil text-warning"></a>
 				{% endif %}
 				{% if "nodes_move_nodes" in perms %}
 				<a href="movenode/{{ node.id }}/" class="move">
-					<img src="/static/images/move.png"></a>
+					<icon class="glyphicon glyphicon-transfer"></a>
 				{% endif %}
 				{% if "nodes_delete_nodes" in perms %}
 				<a href="deletenode/{{ node.id }}/" class="del" >
-					<img src="/static/images/delete.png"></a>
+					<icon class="glyphicon glyphicon-trash text-danger"></a>
 				{% endif %}
 			</span>

@@ -260,7 +260,7 @@ $(document).ready(function(){
 							}
 							else
 							{
-								curr.className = 'label label-important'
+								curr.className = 'label label-danger'
 							}
 						}
 					}
@@ -335,7 +335,7 @@ $(document).ready(function(){
 						if (obj.prev().attr("value")!="0") port="<small>" + obj.prev().attr("value") + "</small> ";
 						if (obj.parent().parent().hasClass("noip")) obj.parent().parent().removeClass("noip");
 						obj.parent().parent().addClass("withip");
-						obj.parent().parent().append("<span class=\"label label-important\">" + port + "<a class=\"linkb\" href=\"http://" + obj.prev().prev().attr("value") + "/\">" + obj.prev().prev().prev().attr("value") + "</a></span> (<span class=\"ipaddr\">" + obj.prev().prev().attr("value") + "</span>)" + json.adminbut).hide().show("slow");
+						obj.parent().parent().append("<span class=\"label label-danger\">" + port + "<a class=\"linkb\" href=\"http://" + obj.prev().prev().attr("value") + "/\">" + obj.prev().prev().prev().attr("value") + "</a></span> (<span class=\"ipaddr\">" + obj.prev().prev().attr("value") + "</span>)" + json.adminbut).hide().show("slow");
 
 						obj.parent().remove();
 					}
@@ -390,7 +390,7 @@ $(document).ready(function(){
 					{
 						if (obj.parent().parent().hasClass("noip")) obj.parent().parent().removeClass("noip");
 						obj.parent().parent().addClass("withip");
-						obj.parent().parent().parent().append("<span class=\"label label-important\"><a class=\"linkb\" href=\"http://" + json.ip + "/\">" + json.comment + "</a></span> (<span class=\"ipaddr\">" + json.ip + "</span>)" + json.adminbut).hide().show("slow");
+						obj.parent().parent().parent().append("<span class=\"label label-danger\"><a class=\"linkb\" href=\"http://" + json.ip + "/\">" + json.comment + "</a></span> (<span class=\"ipaddr\">" + json.ip + "</span>)" + json.adminbut).hide().show("slow");
 						obj.parent().parent().parent().parent().attr("id",json.id);
 						obj.parent().remove();
 					}

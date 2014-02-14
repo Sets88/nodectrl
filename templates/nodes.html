@@ -20,7 +20,7 @@
 	</tr>
 </table>
 <div class="ipgroup" id="0">
-	<ul style="margin-left:0px;">
+	<ul style="margin-left:0px;padding:10px;">
 {% for node in nodes recursive %}
 <div class="ipgroup" id="{{node.id}}">
 	{% if act == "edit" and id == node.id %}
@@ -43,7 +43,7 @@
 			{% if node.status %}
 				<span class="normal-ip">
 			{% else %}
-				<span class="label label-important">
+				<span class="label label-danger">
 			{% endif %}
 			{% if "nodes_show_ips" in perms %}
 				<small>

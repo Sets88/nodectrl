@@ -1,108 +1,171 @@
 {% extends "main.html" %}
 {% block nodes %}
 <a href="/">{{ _('Back') }}</a>
-<table border=1 width="100%">
+<table width="100%">
 	<tr>
 		<td valign="top">
-			<a href="/settings/adduser/"><img src="/static/images/add.png" title="{{ _('Add user') }}"></a>{{ _('Users') }}:<br>
-			<table width="100%">
-			{% for user in settings['users'] %}
-			<tr>
-				{% if act == "edituser" and id == user %}
-					<td colspan=2>
-						<form action="/settings/edituser/{{ user }}/" method="POST">
-							<label>{{ _('Password for user') }} {{ user }}:</label><input type="text" name="password">
-							<input type="submit" value="Применить">
-						</form>
-					</td>
-				{% else %}
-					<td>
-						{{ user }}</td>
-					<td align="right">
-						<a href="/settings/edituser/{{ user }}/"><img src="/static/images/edit.png" title="{{ _('Change password for user') }} {{ user }}"></a>
-						<a href="/settings/deleteuser/{{ user }}/"><img src="/static/images/delete.png" title="{{ _('Delete user') }} {{ user }}"></a>
-					</td>
-				{% endif %}
-			</tr>
-			{% endfor %}
-			{% if act == "adduser" %}
-			<tr>
-				<td colspan=2>
-					<form action="/settings/adduser/" method="POST">
-						<label>{{ _('Login') }}:</label><input type="text" name="login">
-						<label>{{ _('Password') }}:</label><input type="text" name="password">
-						<input type="submit" value="{{ _('Apply') }}">
-					</form>
-				</td>
-			</tr>
-			{% endif %}
-			</table>
-			<label>Ключ</label>
-			<form action="/settings/setsecret/" method="POST">
-				<input type="text" name="secret" value="{{ settings['secret'] }}"><br>
-				<input type="submit" value="{{ _('Apply') }}">
-			</form>
-			{{ _('Generate token based on key') }}:
-			<form action="/settings/generatehash/" method="POST">
-				<input type="text" name="text" value="{{ hashh }}"><br>
-				<input type="submit" value="{{ _('Generate') }}">
-			</form>
-		</td>
-		<td valign="top">
-			{{ _('Data base') }}:<br>
-			<form action="/settings/setdboptions/" method="POST">
-				<label>{{ _('DB type') }}</label>
-				<input type="text" name="engine" value="{{ settings['db']['engine'] }}"><br>
-				<label>{{ _('Host name') }}</label>
-				<input type="text" name="host" value="{{ settings['db']['host'] }}"><br>
-				<label>{{ _('DB name') }}</label>
-				<input type="text" name="db" value="{{ settings['db']['db'] }}"><br>
-				<label>{{ _('Username') }}</label>
-				<input type="text" name="user" value="{{ settings['db']['user'] }}"><br>
-				<label>{{ _('Password') }}</label>
-				<input type="text" name="password" value=""><br>
-				<label>Port</label>
-				<input type="text" name="port" value="{{ settings['db']['port'] }}"><br>
-				<input type="submit" value="{{ _('Apply') }}">
-			</form>
-		</td>
-		<td valign="top">
-			<a href="/settings/addcategory/"><img src="/static/images/add.png" title="{{ _('Add category') }}"></a>
-			{{ _('Categories') }}:<br>
-			<table width="100%">
-				<tr>
-					{% for cat in settings['categories'] %}
-					<td colspan=2>
-						{% if act == "editcategory" and id == loop.index0 %}
-							<form action="" method="POST">
-								<input type="text" name="name" value="{{ cat[0] }}">
-								<input type="submit" value="{{ _('Apply') }}">
-							</form>
-						{% else %}
-							<a href="/settings/addsubnet/{{ loop.index0 }}/"><img src="/static/images/add.png" title="{{ _('Add subnet to category') }} {{ cat[0] }}"></a>
-							<a href="/settings/deletecategory/{{ loop.index0 }}/"><img src="/static/images/delete.png" title="{{ _('Delete category') }} {{ cat[0] }}"></a>
-							<a href="/settings/editcategory/{{ loop.index0 }}/"><img src="/static/images/edit.png" title="{{ _('Edit category') }} {{ cat[0] }}"></a>
-							{{ cat[0] }}
+			<div class="panel panel-info">
+				<div class="panel-heading" align="left">
+				<a href="/settings/adduser/">
+					<img src="/static/images/add.png" title="{{ _('Add user') }}"></a>
+					{{ _('Users') }}
+				</div>
+				<div class="panel-body">
+					<br>				
+					<table width="100%">
+						{% for user in settings['users'] %}
+						<tr>
+							{% if act == "edituser" and id == user %}
+							<td colspan=2>
+								<form action="/settings/edituser/{{ user }}/" method="POST">
+									<label  class="control-label">{{ _('Password for user') }} {{ user }}:</label>
+									<input class="form-control" type="text" name="password">				
+									<input class="form-control" type="submit" value="Применить"></form>
+							</td>
+							{% else %}
+							<td>{{ user }}</td>
+							<td align="right">
+								<span style="white-space: nowrap;">
+									<a href="/settings/edituser/{{ user }}/">
+										<img src="/static/images/edit.png" title="{{ _('Change password for user') }} {{ user }}"></a>
+									<a href="/settings/deleteuser/{{ user }}/">
+										<img src="/static/images/delete.png" title="{{ _('Delete user') }} {{ user }}"></a>
+								</span>
+							</td>
+							{% endif %}
+						</tr>
+						{% endfor %}
+						{% if act == "adduser" %}
+						<tr>
+							<td colspan=2>
+								<form action="/settings/adduser/" method="POST">
+									<label class="control-label">{{ _('Login') }}:</label>
+									<input class="form-control" type="text" name="login">				
+									<label class="control-label">{{ _('Password') }}:</label>
+									<input class="form-control" type="text" name="password">				
+									<input class="form-control" type="submit" value="{{ _('Apply') }}">
+								</form>
+							</td>
+						</tr>
 						{% endif %}
-					</td>
-				</tr>	
+					</table>
+					<label class="control-label">Ключ</label>
+					<form action="/settings/setsecret/" method="POST">
+						<input class="form-control" type="text" name="secret" value="{{ settings['secret'] }}">				
+						<br>				
+						<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
+					{{ _('Generate token based on key') }}:
+					<form action="/settings/generatehash/" method="POST">
+						<input class="form-control" type="text" name="text" value="{{ hashh }}">				
+						<br>				
+						<input class="form-control" type="submit" value="{{ _('Generate') }}"></form>
+				</div>
+			</div>
+			<div class="panel panel-info">
+				<div class="panel-heading" align="left">{{ _('Permissions') }}:</div>
+				<div class="panel-body">
+					<table width="100%">
+						{% for perm in settings['permissions'].items() %}
+						{% if act == "editpermission" and permission == perm[0] %}
+						<tr>
+							<td colspan=3>
+								<form action="/settings/editpermission/{{ perm[0] }}/" method="POST">
+									<label class="control-label"> <strong>{{ perm[0] }}</strong>
+									</label class="control-label">
+									<input class="form-control" type="text" name="permission" value="{{ ", ".join(perm[1]) }}">			
+									<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
+							</td>
+						</tr>
+						{% else %}
+						<tr>
+							<td>{{ perm[0] }}</td>
+							<td>{{ ", ".join(perm[1]) }}</td>
+							<td>
+								<a href="/settings/editpermission/{{ perm[0] }}/">
+								<img src="/static/images/edit.png"</a></td>
+						</tr>
+						{% endif %}
+						{% endfor %}
+					</table>
+				</div>
+			</div>
+		</td>
+		<td valign="top">
+			<div class="panel panel-info">
+				<div class="panel-heading" align="left">
+					{{ _('Data base') }}
+					<br></div>
+				<div class="panel-body">
+					<form action="/settings/setdboptions/" method="POST">
+						<label class="control-label">{{ _('DB type') }}</label><br>
+						<input class="form-control" type="text" name="engine" value="{{ settings['db']['engine'] }}">
+						<br>
+						<label class="control-label">{{ _('Host name') }}</label><br>
+						<input class="form-control" type="text" name="host" value="{{ settings['db']['host'] }}">
+						<br>
+						<label class="control-label">{{ _('DB name') }}</label><br>
+						<input class="form-control" type="text" name="db" value="{{ settings['db']['db'] }}">
+						<br>
+						<label class="control-label">{{ _('Username') }}</label><br>
+						<input class="form-control" type="text" name="user" value="{{ settings['db']['user'] }}">
+						<br>
+						<label class="control-label">{{ _('Password') }}</label><br>
+						<input class="form-control" type="text" name="password" value="">
+						<br>
+						<label class="control-label">Port</label><br>
+						<input class="form-control" type="text" name="port" value="{{ settings['db']['port'] }}">
+						<br>
+						<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
+				</div>
+			</div>
+		</td>
+		<td valign="top">
+			<div class="panel panel-info">
+				<div class="panel-heading" align="left">
+					<a href="/settings/addcategory/">
+						<img src="/static/images/add.png" title="{{ _('Add category') }}"></a>
+					{{ _('Categories') }}
+					<br></div>
+				<div class="panel-body">
+					<table width="100%">
+						<tr>
+							{% for cat in settings['categories'] %}
+						<td colspan=2>
+								{% if act == "editcategory" and id == loop.index0 %}
+								<form action="" method="POST">
+									<input class="form-control" type="text" name="name" value="{{ cat[0] }}">			
+									<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
+								{% else %}
+								<a href="/settings/addsubnet/{{ loop.index0 }}/">
+									<img src="/static/images/add.png" title="{{ _('Add subnet to category') }} {{ cat[0] }}"></a>
+								<a href="/settings/deletecategory/{{ loop.index0 }}/">
+									<img src="/static/images/delete.png" title="{{ _('Delete category') }} {{ cat[0] }}"></a>
+								<a href="/settings/editcategory/{{ loop.index0 }}/">
+									<img src="/static/images/edit.png" title="{{ _('Edit category') }} {{ cat[0] }}"></a>
+								{{ cat[0] }}
+						{% endif %}
+							</td>
+						</tr>
 						{% set outer_loop = loop %}
 						{% for net in cat[1] %}
 						<tr>
 							{% if act == "editsubnet" and catid == outer_loop.index0 and id == loop.index0 %}
-								<td colspan="2">
-									<form action="" method="POST">
-										<input type="text" name="net" value="{{ net[0] }}" >
-										<input type="text" name="vlan" value="{{ net[1] }}" >
-										<input type="submit" value="{{ _('Apply') }}" >
-									</form>
-								</td>
+							<td colspan="2">
+								<form action="" method="POST">
+									<input class="form-control" type="text" name="net" value="{{ net[0] }}" >			
+									<input class="form-control" type="text" name="vlan" value="{{ net[1] }}" >			
+									<input class="form-control" type="submit" value="{{ _('Apply') }}" ></form>
+							</td>
 							{% else %}
-								<td>{{ net[0] }}</td>
-								<td align="right">
-									<a href="/settings/editsubnet/{{ outer_loop.index0 }}/{{ loop.index0 }}/"><img src="/static/images/edit.png"></a>
-									<a href="/settings/deletesubnet/{{ outer_loop.index0 }}/{{ loop.index0 }}/"><img src="/static/images/delete.png"></a>
-								</td>
+							<td>{{ net[0] }}</td>
+							<td align="right">
+								<span style="white-space: nowrap;">
+									<a href="/settings/editsubnet/{{ outer_loop.index0 }}/{{ loop.index0 }}/">
+										<img src="/static/images/edit.png"></a>
+									<a href="/settings/deletesubnet/{{ outer_loop.index0 }}/{{ loop.index0 }}/">
+										<img src="/static/images/delete.png"></a>
+								</span>
+							</td>
 							{% endif %}
 						</tr>
 						{% endfor %}
@@ -110,10 +173,9 @@
 						<tr>
 							<td>
 								<form action="" method="POST">
-									<input type="text" name="net" value="" >
-									<input type="text" name="vlan" value="" >
-									<input type="submit" value="{{ _('Apply') }}" >
-								</form>
+									<input class="form-control" type="text" name="net" value="" >			
+									<input class="form-control" type="text" name="vlan" value="" >			
+									<input class="form-control" type="submit" value="{{ _('Apply') }}" ></form>
 							</td>
 						</tr>
 						{% endif %}
@@ -122,90 +184,86 @@
 						<tr>
 							<td colspan=2>
 								<form action="/settings/addcategory/" method="POST">
-									<input type="text" name="name">
-									<input type="submit" value="{{ _('Apply') }}">
-								</form>
+									<input class="form-control" type="text" name="name">			
+									<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
 							</td>
 						</tr>
-					{% endif %}
-			</table>
+						{% endif %}
+					</table>
+				</div>
+			</div>
 		</td>
 		<td valign="top">
-			<table width="100%">
-				<tr>
-					<td colspan=2>
-						<a href="/settings/addlink/"><img src="/static/images/add.png" title="Add link"></a>
-						{{ _('Additional links') }}:
-					</td>
-				</tr>
-					{% for link in settings['addlinks'].items() %}
-					<tr>
-						{% if act == "editlink" and id == link[0] %}
-						<td>
-							<form action="" method="POST">
-								<label>{{ _('Title') }}:</label>
-								<input type="text" name="name" value="{{ link[0] }}">
-								<label>{{ _('URL') }}:</label>
-								<input type="text" name="url" value="{{ link[1] }}"><br>
-								<input type="submit" value="{{ _('Apply') }}">
-							</form>
-						</td>
-						{% else %}
-						<td><a href="{{ link[1] }}">{{ link[0] }}</a></td>
-						<td align="right">
-							<a href="/settings/editlink/{{ link[0] }}/"><img src="/static/images/edit.png" title="{{ _('Change link') }}"></a>
-							<a href="/settings/deletelink/{{ link[0] }}/"><img src="/static/images/delete.png" title="Delete link"></a>
-						</td>
-						{% endif %}
-					</tr>
-					{% endfor %}
+			<div class="panel panel-info">
+				<div class="panel-heading" align="left">{{ _('Other') }}</div>
+				<div class="panel-body">
+					<table width="100%">
+						<tr>
+							<td colspan=2>
+								<a href="/settings/addlink/">
+									<img src="/static/images/add.png" title="Add link"></a>
+								{{ _('Additional links') }}:
+							</td>
+						</tr>
+						{% for link in settings['addlinks'].items() %}
+						<tr>
+							{% if act == "editlink" and id == link[0] %}
+							<td>
+								<form action="" method="POST">
+									<label class="control-label">{{ _('Title') }}:</label>
+									<input class="form-control" type="text" name="name" value="{{ link[0] }}">			
+									<label class="control-label">{{ _('URL') }}:</label>
+									<input class="form-control" type="text" name="url" value="{{ link[1] }}">			
+									<br>			
+									<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
+							</td>
+							{% else %}
+							<td>
+								<a href="{{ link[1] }}">{{ link[0] }}</a>
+							</td>
+							<td align="right">
+								<span style="white-space: nowrap;">
+									<a href="/settings/editlink/{{ link[0] }}/">
+										<img src="/static/images/edit.png" title="{{ _('Change link') }}"></a>
+									<a href="/settings/deletelink/{{ link[0] }}/">
+										<img src="/static/images/delete.png" title="Delete link"></a>
+								</span>
+							</td>
+							{% endif %}
+						</tr>
+						{% endfor %}
 					{% if act == "addlink" %}
-					<tr>
-						<td colspan=2>
-							<form action="/settings/addlink/" method="POST">
-								<label>{{ _('Title') }}:</label><input type="text" name="name">
-								<label>{{ _('URL') }}:</label><input type="text" name="url">
-								<input type="submit" value="{{ _('Apply') }}">
-							</form>
-						</td>
-					</tr>
-					{% endif %}
-					<tr>
-						<td>
-							<br>
-							<form action="/settings/setlanguage/" method="POST">
-								<label>Set language:</label><input value="{{ settings['language'] }}" type="text" name="language">
-								<input type="submit" value="{{ _('Apply') }}">
-							</form>
-						</td>
-					</tr>
-			</table>
+						<tr>
+							<td colspan=2>
+								<form action="/settings/addlink/" method="POST">
+									<label class="control-label">{{ _('Title') }}:</label>
+									<input class="form-control" type="text" name="name">			
+									<label class="control-label">{{ _('URL') }}:</label>
+									<input class="form-control" type="text" name="url">			
+									<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
+							</td>
+						</tr>
+						{% endif %}
+						<tr>
+							<td>
+								<br>			
+								<form action="/settings/setlanguage/" method="POST">
+									<label class="control-label">Set language:</label>
+									<div class="input-group">
+									<input class="form-control" value="{{ settings['language'] }}" type="text" name="language">			
+									<span class="input-group-btn">
+										<button class="btn btn-default" type="submit">{{ _('Apply') }}</button></form>
+									</span>
+									</div>
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
 		</td>
 	</tr>
 	<tr>
 		<td>
-			{{ _('Permissions') }}:
-			<table width="100%">
-			{% for perm in settings['permissions'].items() %}
-			{% if act == "editpermission" and permission == perm[0] %}
-			<tr>
-				<td colspan=3>
-				<form action="/settings/editpermission/{{ perm[0] }}/" method="POST">
-					<label><strong>{{ perm[0] }}</strong></label>
-					<input type="text" name="permission" value="{{ ", ".join(perm[1]) }}">
-					<input type="submit" value="{{ _('Apply') }}">
-				</form>
-				</td>
-			</tr>
-			{% else %}
-			<tr>
-				<td>{{ perm[0] }}</td>
-				<td>{{ ", ".join(perm[1]) }}</td>
-				<td><a href="/settings/editpermission/{{ perm[0] }}/"><img src="/static/images/edit.png"</a></td>
-			</tr>
-			{% endif %}
-			{% endfor %}
-			</table>
 		</td>
 	</tr>
 </table>
