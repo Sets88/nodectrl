@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask
-from flask import request, redirect, abort
+from flask import request, redirect, abort, session
 from flask import jsonify
 from flask import make_response
 from flask import render_template
@@ -22,7 +22,6 @@ auth = Auth(Settings()['users'], Settings()['secret'])
 
 app.secret_key = str(Settings()['secret'])
 
-cookies = {}
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
@@ -36,10 +35,8 @@ except (IOError):
 Settings().join_permissions(node_permissons)
 
 def get_cat():
-    """Gets cat from cookies otherwise returns 0"""
-    global cookies
-    cats = str(get_cookie("cat")).split(",")
-
+    """Gets cat from session otherwise returns 0"""
+    cats = str(session.get("cat")).split(",")
     try:
         for cat in cats:
             if Settings()['categories'][int(cat)]:
@@ -48,13 +45,6 @@ def get_cat():
         return ["0"]
     else:
         return cats
-
-
-def get_cookie(name):
-    if name in cookies:
-        return cookies[name]
-    else:
-        return request.cookies.get(name)
 
 
 @app.teardown_request
@@ -94,19 +84,6 @@ def require_permission(permission):
         return wraper
     return decorator
 
-def update_cookie(func):
-    """Checks if cookie change needed on response"""
-    @wraps(func)
-    def wraper(*args, **kwargs):
-        global cookies
-        response = make_response(func(*args, **kwargs))
-        if cookies:
-            for (key, val) in cookies.items():
-                response.set_cookie(key, val)
-            cookies.clear()
-        return response
-    return wraper
-
 
 # MAIN #################
 
@@ -123,7 +100,6 @@ def logout():
 
 
 @app.route("/")
-@update_cookie
 @login_required
 def nodes():
     """Display nodes list"""
@@ -211,9 +187,8 @@ def delete_node(id):
 @login_required
 def set_cat(catid):
     """Change category of nodes"""
-    global cookies
     if len(Settings()['categories']) > int(catid):
-        cookies["cat"] = catid
+        session["cat"] = catid
     return redirect("/")
 
 @app.route("/checknodes/<int:id>/")
