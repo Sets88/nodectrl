@@ -19,8 +19,13 @@
 							<td colspan=2>
 								<form action="/settings/edituser/{{ user }}/" method="POST">
 									<label  class="control-label">{{ _('Password for user') }} {{ user }}:</label>
-									<input class="form-control" type="text" name="password">				
-									<input class="form-control" type="submit" value="Применить"></form>
+									<div class="input-group">
+										<input class="form-control" type="text" name="password">
+										<span class="input-group-btn">
+											<button class="btn btn-primary" type="submit">{{ _('Apply') }}</button>
+										</span>
+									</div>
+								</form>
 							</td>
 							{% else %}
 							<td>{{ user }}</td>
@@ -43,7 +48,7 @@
 									<input class="form-control" type="text" name="login">				
 									<label class="control-label">{{ _('Password') }}:</label>
 									<input class="form-control" type="text" name="password">				
-									<input class="form-control" type="submit" value="{{ _('Apply') }}">
+									<input class="form-control btn btn-primary" type="submit" value="{{ _('Apply') }}">
 								</form>
 							</td>
 						</tr>
@@ -51,14 +56,22 @@
 					</table>
 					<label class="control-label">Ключ</label>
 					<form action="/settings/setsecret/" method="POST">
-						<input class="form-control" type="text" name="secret" value="{{ settings['secret'] }}">				
-						<br>				
-						<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
+						<div class="input-group">
+							<input class="form-control" type="text" name="secret" value="{{ settings['secret'] }}">				
+							<span class="input-group-btn">
+								<button class="btn btn-primary" type="submit">{{ _('Apply') }}</button>
+							</span>
+						</div>
+					</form>
 					{{ _('Generate token based on key') }}:
 					<form action="/settings/generatehash/" method="POST">
-						<input class="form-control" type="text" name="text" value="{{ hashh }}">				
-						<br>				
-						<input class="form-control" type="submit" value="{{ _('Generate') }}"></form>
+						<div class="input-group">
+							<input class="form-control" type="text" placeholder="{{ _('IP address') }}" name="text" value="{{ hashh }}">				
+							<span class="input-group-btn">
+								<button class="btn btn-primary" type="submit">{{ _('Generate') }}</button>
+							</span>
+						</div>
+					</form>
 				</div>
 			</div>
 			<div class="panel panel-info">
@@ -72,8 +85,13 @@
 								<form action="/settings/editpermission/{{ perm[0] }}/" method="POST">
 									<label class="control-label"> <strong>{{ perm[0] }}</strong>
 									</label class="control-label">
-									<input class="form-control" type="text" name="permission" value="{{ ", ".join(perm[1]) }}">			
-									<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
+									<div class="input-group">
+										<input class="form-control" type="text" name="permission" value="{{ ", ".join(perm[1]) }}">
+										<span class="input-group-btn">
+											<button class="btn btn-primary" type="submit">{{ _('Apply') }}</button>
+										</span>
+									</div>
+								</form>
 							</td>
 						</tr>
 						{% else %}
@@ -115,7 +133,7 @@
 						<label class="control-label">Port</label><br>
 						<input class="form-control" type="text" name="port" value="{{ settings['db']['port'] }}">
 						<br>
-						<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
+						<input class="form-control btn btn-primary" type="submit" value="{{ _('Apply') }}"></form>
 				</div>
 			</div>
 		</td>
@@ -133,8 +151,12 @@
 						<td colspan=2>
 								{% if act == "editcategory" and id == loop.index0 %}
 								<form action="" method="POST">
-									<input class="form-control" type="text" name="name" value="{{ cat[0] }}">			
-									<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
+									<div class="input-group">
+										<input class="form-control" type="text" name="name" value="{{ cat[0] }}">
+										<span class="input-group-btn">
+											<input class="btn btn-primary" type="submit" value="{{ _('Apply') }}"></form>
+										</span>
+									</div>
 								{% else %}
 								<a href="/settings/addsubnet/{{ loop.index0 }}/">
 									<img src="/static/images/add.png" title="{{ _('Add subnet to category') }} {{ cat[0] }}"></a>
@@ -154,7 +176,7 @@
 								<form action="" method="POST">
 									<input class="form-control" type="text" name="net" value="{{ net[0] }}" >			
 									<input class="form-control" type="text" name="vlan" value="{{ net[1] }}" >			
-									<input class="form-control" type="submit" value="{{ _('Apply') }}" ></form>
+									<input class="form-control btn btn-primary" type="submit" value="{{ _('Apply') }}" ></form>
 							</td>
 							{% else %}
 							<td>{{ net[0] }}</td>
@@ -175,7 +197,7 @@
 								<form action="" method="POST">
 									<input class="form-control" type="text" name="net" value="" >			
 									<input class="form-control" type="text" name="vlan" value="" >			
-									<input class="form-control" type="submit" value="{{ _('Apply') }}" ></form>
+									<input class="form-control btn btn-primary" type="submit" value="{{ _('Apply') }}" ></form>
 							</td>
 						</tr>
 						{% endif %}
@@ -185,7 +207,7 @@
 							<td colspan=2>
 								<form action="/settings/addcategory/" method="POST">
 									<input class="form-control" type="text" name="name">			
-									<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
+									<input class="form-control btn btn-primary" type="submit" value="{{ _('Apply') }}"></form>
 							</td>
 						</tr>
 						{% endif %}
@@ -215,7 +237,7 @@
 									<label class="control-label">{{ _('URL') }}:</label>
 									<input class="form-control" type="text" name="url" value="{{ link[1] }}">			
 									<br>			
-									<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
+									<input class="form-control btn btn-primary" type="submit" value="{{ _('Apply') }}"></form>
 							</td>
 							{% else %}
 							<td>
@@ -240,7 +262,7 @@
 									<input class="form-control" type="text" name="name">			
 									<label class="control-label">{{ _('URL') }}:</label>
 									<input class="form-control" type="text" name="url">			
-									<input class="form-control" type="submit" value="{{ _('Apply') }}"></form>
+									<input class="form-control btn btn-primary" type="submit" value="{{ _('Apply') }}"></form>
 							</td>
 						</tr>
 						{% endif %}
@@ -250,10 +272,10 @@
 								<form action="/settings/setlanguage/" method="POST">
 									<label class="control-label">Set language:</label>
 									<div class="input-group">
-									<input class="form-control" value="{{ settings['language'] }}" type="text" name="language">			
-									<span class="input-group-btn">
-										<button class="btn btn-default" type="submit">{{ _('Apply') }}</button></form>
-									</span>
+										<input class="form-control" value="{{ settings['language'] }}" type="text" name="language">			
+										<span class="input-group-btn">
+											<button class="btn btn-default btn btn-primary" type="submit">{{ _('Apply') }}</button></form>
+										</span>
 									</div>
 							</td>
 						</tr>
