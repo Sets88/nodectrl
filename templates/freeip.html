@@ -1,17 +1,9 @@
 {% extends "main.html" %}
 {% block nodes %}
-<table>
-	<tr>
-		<td>
-			{{ _('Filter by IP') }}:
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<input class="ipfreesrch" type="text">
-		</td>
-	</tr>
-</table>
+<div style="width: 400px;">
+	<label>{{ _('Filter by IP') }} </label>
+	<input class="ipfreesrch form-control" type="text">
+</div>
 <div>
 	<ul style="margin-left:0px;padding:10px;">
 		<table>
