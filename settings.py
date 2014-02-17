@@ -11,7 +11,7 @@ class Settings(object):
     root_path = os.path.dirname(os.path.realpath(__file__))
 
     options = {"users": {},
-               "secret": "",
+               "secret": "secret",
                "db": {
                    "engine": "sqlite",
                    "db": os.path.join(root_path, "nodes.db"),
