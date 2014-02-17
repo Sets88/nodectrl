@@ -25,12 +25,31 @@
 <div class="ipgroup" id="{{node.id}}">
 	{% if act == "edit" and id == node.id %}
 		<div class="withip">
-			<form class="navbar-form" method="POST" action="/editnode/{{node.id}}/">
-				<input type="text" value="{{ node.comment }}" name="comment" id="{{ node.id }}">
-				<input type="text" value="{{ node.ipaddr }}" name="ip">
-				<input type="text" style="width:40px;" value="{{ node.port }}" name="port">
-				<input type="submit" value="{{ _('Change') }}" name="submit">
-				<span class="adminbut"></span>
+			<form class="form-horizontal" method="POST" action="/editnode/{{node.id}}/">
+				<div class="form-group">
+					<label class="col-sm-2 control-label">{{ _('Name') }}</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" value="{{ node.comment }}" name="comment" id="{{ node.id }}">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">{{ _('IP address') }}</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" value="{{ node.ipaddr }}" name="ip">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">{{ _('Port Number') }}</label>
+					<div class="col-sm-10">
+						<input class="form-control" type="text" value="{{ node.port }}" name="port">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="submit" class="btn btn-primary">{{ _('Change') }}</button>
+						<span class="adminbut"></span>
+					</div>
+				</div>
 			</form>
 		</div>
 	{% elif act == "move" and id == node.id %}
@@ -78,8 +97,12 @@
 		<ul>
 		{% if act == "add" and id == node.id %}
 			<form action="/addnode/{{ node.id }}/" method="POST" class="navbar-form">
-				<input name="comment" class="noevent" value="" type="text">
-				<input name="submit" class="addbutton btn" id="{{ node.id }}" value="{{ _('Add') }}" type="submit">
+				<div class="input-group">
+					<input name="comment" class="noevent form-control" value="" type="text">
+				<span class="input-group-btn">
+					<button name="submit" class="addbutton btn btn-primary" id="{{ node.id }}" type="submit">{{ _('Add') }}</button>
+				</span>
+				</div>
 			</form>
 		{% endif %}
 	{% if node.child_list %}
