@@ -27,7 +27,12 @@
 		{% if act == "editcomment" and ip == node.ipaddr %}
 			<td colspan=2>
 				<form action="/freeip/editcomment/{{ node.ipaddr }}/" method="POST">
-					<input name="comment" value="{{ node.comment }}"><input type="submit" value="Изменить">
+					<div class="input-group">
+						<input class="form-control" name="comment" value="{{ node.comment }}">
+						<span class="input-group-btn">
+							<button class="btn btn-primary" type="submit">{{ _('Change') }}</button>
+						</span>
+					</div>
 				</form>
 			</td>
 		{% else %}
