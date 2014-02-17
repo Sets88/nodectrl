@@ -82,7 +82,7 @@ $(document).ready(function(){
 	{
 		var obj = $(this);
 		$.ajax({
-			url: 'ajax/' + $(this).attr("href"),
+			url: 'ajax' + $(this).attr("href"),
 			dataType: "json",
 			error: function() 
 			{
@@ -94,7 +94,7 @@ $(document).ready(function(){
 				if (json.result=="0")
 				{
 					obj.parent().parent().hide();
-					obj.parent().parent().html("<form action=\"" + "\" method=\"POST\" class=\"navbar-form\"><input name=\"comment\" class=\"noevent\" type=\"text\" value=\"" + json.comment + "\"><input name=\"ip\" type=\"text\" class=\"noevent\" value=\"" + json.ip + "\"><input name=\"port\" type=\"text\" class=\"noevent\" value=\"" + json.port + "\" style=\"width:40px;\"><input name=\"submit\" class=\"editbutton btn\" id=\"" + json.id + "\" type=\"submit\" value=\"{{ _('Change') }}\"></form>").fadeIn("slow");
+					obj.parent().parent().html("<form action=\"" + "\" method=\"POST\" class=\"navbar-form\"><input name=\"comment\" class=\"noevent\" type=\"text\" value=\"" + json.comment + "\"><input name=\"ip\" type=\"text\" class=\"noevent\" value=\"" + json.ip + "\"><input name=\"port\" type=\"text\" class=\"noevent\" value=\"" + json.port + "\" style=\"width:40px;\"><input name=\"submit\" class=\"editbutton btn btn-primary\" id=\"" + json.id + "\" type=\"submit\" value=\"{{ _('Change') }}\"></form>").fadeIn("slow");
 				}
 				else show_notice("Unknown error", "danger");
 			}
@@ -106,7 +106,7 @@ $(document).ready(function(){
 	{
 		var obj = $(this);
 		$.ajax({
-			url: 'ajax/' + $(this).attr("href"),
+			url: 'ajax' + $(this).attr("href"),
 			dataType: "html",
 			error: function() 
 			{
@@ -196,7 +196,7 @@ $(document).ready(function(){
 	$(document).on('click',".ipgroup .add", function()
 	{
 		var id = $(this).attr("href").match(/([0-9]+)/)[1];
-		$(this).parent().parent().parent().children("ul:eq(0)").append("<div class=\"ipgroup\"><div class=\"noip\"><form action=\"" + "\" method=\"POST\" class=\"navbar-form\"><input name=\"comment\" class=\"noevent\" type=\"text\" value=\"\"><input name=\"submit\" class=\"addbutton btn\" id=\"" + id + "\" type=\"submit\" value=\"{{ _('Add') }}\"></form></div></div>").get(1);
+		$(this).parent().parent().parent().children("ul:eq(0)").append("<div class=\"ipgroup\"><div class=\"noip\"><form action=\"" + "\" method=\"POST\" class=\"navbar-form\"><input name=\"comment\" class=\"noevent\" type=\"text\" value=\"\"><input name=\"submit\" class=\"addbutton btn btn-primary\" id=\"" + id + "\" type=\"submit\" value=\"{{ _('Add') }}\"></form></div></div>").get(1);
 		return false;
 	});
 
@@ -205,7 +205,7 @@ $(document).ready(function(){
 		if (confirm("{{ _('Are you sure, you want to delete this node?') }}"))
 		{
 			var obj = $(this);
-			$.getJSON('ajax/' + $(this).attr("href"), {}, function(json)
+			$.getJSON('ajax' + $(this).attr("href"), {}, function(json)
 			{
 				if (json.result=="0")
 				{
