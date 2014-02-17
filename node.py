@@ -315,6 +315,18 @@ class Node(Base):
             self.ip = ip
             self.ipaddr = ipaddr
         except:
+            if len(ipaddr) == 0:
+                self.ip = 0
+                return True
+            return False
+        else:
+            return True
+
+    def set_port(self, port):
+        try:
+            port = int(port)
+        except ValueError:
+            self.port = 0
             return False
         else:
             return True

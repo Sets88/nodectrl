@@ -93,8 +93,8 @@ $(document).ready(function(){
 
 				if (json.result=="0")
 				{
-					obj.parent().parent().hide();
-					obj.parent().parent().html("<form action=\"" + "\" method=\"POST\" class=\"navbar-form\"><input name=\"comment\" class=\"noevent\" type=\"text\" value=\"" + json.comment + "\"><input name=\"ip\" type=\"text\" class=\"noevent\" value=\"" + json.ip + "\"><input name=\"port\" type=\"text\" class=\"noevent\" value=\"" + json.port + "\" style=\"width:40px;\"><input name=\"submit\" class=\"editbutton btn btn-primary\" id=\"" + json.id + "\" type=\"submit\" value=\"{{ _('Change') }}\"></form>").fadeIn("slow");
+					obj.parents(".node").first().hide();
+					obj.parents(".node").first().html("<form action=\"" + "\" method=\"POST\" class=\"navbar-form\"><input name=\"comment\" class=\"noevent\" type=\"text\" value=\"" + json.comment + "\"><input name=\"ip\" type=\"text\" class=\"noevent\" value=\"" + json.ip + "\"><input name=\"port\" type=\"text\" class=\"noevent\" value=\"" + json.port + "\" style=\"width:40px;\"><input name=\"submit\" class=\"editbutton btn btn-primary\" id=\"" + json.id + "\" type=\"submit\" value=\"{{ _('Change') }}\"></form>").fadeIn("slow");
 				}
 				else show_notice("Unknown error", "danger");
 			}
@@ -114,8 +114,8 @@ $(document).ready(function(){
 			},
 			success: function(json)
 			{
-				obj.parent().parent().hide("fast");
-				obj.parent().parent().after(json).next().hide().fadeIn("slow");
+				obj.parents(".node").hide("fast");
+				obj.parents(".node").after(json).next().hide().fadeIn("slow");
 				$(".chzn-select").chosen({search_contains: true});
 
 			}
@@ -195,8 +195,9 @@ $(document).ready(function(){
 
 	$(document).on('click',".ipgroup .add", function()
 	{
+		//alert()
 		var id = $(this).attr("href").match(/([0-9]+)/)[1];
-		$(this).parent().parent().parent().children("ul:eq(0)").append("<div class=\"ipgroup\"><div class=\"noip\"><form action=\"" + "\" method=\"POST\" class=\"navbar-form\"><input name=\"comment\" class=\"noevent\" type=\"text\" value=\"\"><input name=\"submit\" class=\"addbutton btn btn-primary\" id=\"" + id + "\" type=\"submit\" value=\"{{ _('Add') }}\"></form></div></div>").get(1);
+		$(this).parents(".ipgroup").first().children("ul:eq(0)").append("<div class=\"ipgroup\"><div class=\"node noip\"><form action=\"" + "\" method=\"POST\" class=\"navbar-form\"><input name=\"comment\" class=\"noevent\" type=\"text\" value=\"\"><input name=\"submit\" class=\"addbutton btn btn-primary\" id=\"" + id + "\" type=\"submit\" value=\"{{ _('Add') }}\"></form></div></div>").get(1);
 		return false;
 	});
 
@@ -209,7 +210,7 @@ $(document).ready(function(){
 			{
 				if (json.result=="0")
 				{
-					obj.parent().parent().parent().slideToggle(500).queue(function(next){obj.parent().parent().parent().remove()});
+					obj.parents(".ipgroup").first().slideToggle(500).queue(function(next){obj.parents(".ipgroup").first().remove()});
 				}
 				else show_notice("Unknown error", "danger");
 			});
@@ -229,7 +230,7 @@ $(document).ready(function(){
 		}
 		else
 		{
-			parent = obj.parent().parent().parent();
+			parent = obj.parents(".ipgroup").first();
 		}
 		parent.fadeTo( 250, 0.25, function() {
 			$.ajaxSetup({
@@ -237,7 +238,7 @@ $(document).ready(function(){
     			show_notice("Connection error", "danger");
     			parent.fadeTo("slow", 1.0);
 			}});
-			$.getJSON('ajax/' + obj.attr("href"), {}, function(json)
+			$.getJSON('ajax' + obj.attr("href"), {}, function(json)
 			{
 				if (json.result=="0")
 				{
@@ -306,7 +307,7 @@ $(document).ready(function(){
 	$(document).on('click',".editbutton",function()
 	{
 		var obj = $(this);
-		var dataString = $(this).parent().serialize();
+		var dataString = $(this).parents("form").first().serialize();
 		$.ajax({
 			url: 'ajax/editnode/' + $(this).attr("id") + "/",
 			type: "POST",
@@ -325,19 +326,19 @@ $(document).ready(function(){
 					if (obj.prev().prev().attr("value")=="0.0.0.0" || obj.prev().prev().attr("value")=="") 
 					{
 						if (obj.prev().attr("value")!="100") port="<small>" + obj.prev().attr("value") + "</small> ";
-						if (obj.parent().parent().hasClass("withip")) obj.parent().parent().removeClass("withip");
-						obj.parent().parent().addClass("noip");
-						obj.parent().parent().append( port + obj.prev().prev().prev().attr("value") + json.adminbut).hide().show("slow");
-						obj.parent().remove();
+						if (obj.parents(".node").first().hasClass("withip")) obj.parents(".node").first().removeClass("withip");
+						obj.parents(".node").first().addClass("noip");
+						obj.parents(".node").first().append( port + obj.prev().prev().prev().attr("value") + json.adminbut).hide().show("slow");
+						obj.parents(".node").first().children().first().remove();
 					}
 					else  
 					{
 						if (obj.prev().attr("value")!="0") port="<small>" + obj.prev().attr("value") + "</small> ";
-						if (obj.parent().parent().hasClass("noip")) obj.parent().parent().removeClass("noip");
-						obj.parent().parent().addClass("withip");
-						obj.parent().parent().append("<span class=\"label label-danger\">" + port + "<a class=\"linkb\" href=\"http://" + obj.prev().prev().attr("value") + "/\">" + obj.prev().prev().prev().attr("value") + "</a></span> (<span class=\"ipaddr\">" + obj.prev().prev().attr("value") + "</span>)" + json.adminbut).hide().show("slow");
+						if (obj.parents(".node").first().hasClass("noip")) obj.parents(".node").first().removeClass("noip");
+						obj.parents(".node").first().addClass("withip");
+						obj.parents(".node").first().append("<span class=\"label label-danger\">" + port + "<a class=\"linkb\" href=\"http://" + obj.prev().prev().attr("value") + "/\">" + obj.prev().prev().prev().attr("value") + "</a></span> (<span class=\"ipaddr\">" + obj.prev().prev().attr("value") + "</span>)" + json.adminbut).hide().show("slow");
 
-						obj.parent().remove();
+						obj.parents(".node").first().children().first().remove();
 					}
 				}
 				else show_notice("Unknown error", "danger");
@@ -350,7 +351,7 @@ $(document).ready(function(){
 	$(document).on('click',".addbutton",function()
 	{
 		var obj = $(this);
-		var dataString = $(this).parent().serialize();
+		var dataString = $(this).parents("form").first().serialize();
 		var url = window.location.href;
 		var catid = url.match(/cat=([0-9]+)/);
 		if (catid == null) catid="0";
@@ -367,33 +368,37 @@ $(document).ready(function(){
 			},
 			success: function(json)
 			{
-				if (json.result=="0")
+				if (json.result == "0")
 				{
-					if (json.ip=="0.0.0.0" || json.ip=="")
+					if (json.ip == "0.0.0.0" || json.ip == "")
 					{
-						if (obj.parent().parent().hasClass("withip")) obj.parent().parent().parent().removeClass("withip");
-						obj.parent().parent().parent().attr("id", json.id).append("<ul></ul>");
-						obj.parent().parent().addClass("noip");
-						obj.parent().parent().append( json.comment + json.adminbut).hide().show("slow");
-						if (obj.parent().attr("id")=="addtoroot")
+						if (obj.parents(".node").first().hasClass("withip")) obj.parents(".node").first().removeClass("withip");
+						obj.parents(".ipgroup").first().attr("id", json.id).append("<ul></ul>");
+						obj.parents(".node").first().addClass("noip");
+						obj.parents(".node").first().append( json.comment + json.adminbut).hide().show("slow");
+						if (obj.parents("form").first().attr("id")=="addtoroot")
 						{
-							$("#0.ipgroup ul:eq(0)").append("<div class=\"ipgroup\"><div id=\"new\"></div>");
-							obj.parent().appendTo("#new");
+							$("#0.ipgroup ul:eq(0)").append("<div class=\"ipgroup\"><div class=\"node\" id=\"new\"></div>");
+							obj.parents("form").first().appendTo("#new");
 							$("#new").removeAttr("id");
 						}
 						else
 						{
-							obj.parent().remove();
+							obj.parents("form").first().remove();
 						}
 					}
 					else
 					{
-						if (obj.parent().parent().hasClass("noip")) obj.parent().parent().removeClass("noip");
-						obj.parent().parent().addClass("withip");
-						obj.parent().parent().parent().append("<span class=\"label label-danger\"><a class=\"linkb\" href=\"http://" + json.ip + "/\">" + json.comment + "</a></span> (<span class=\"ipaddr\">" + json.ip + "</span>)" + json.adminbut).hide().show("slow");
-						obj.parent().parent().parent().parent().attr("id",json.id);
-						obj.parent().remove();
+						if (obj.parents(".node").first().hasClass("noip")) obj.parents(".node").first().removeClass("noip");
+						obj.parents(".node").first().addClass("withip");
+						obj.parents(".ipgroup").first().append("<span class=\"label label-danger\"><a class=\"linkb\" href=\"http://" + json.ip + "/\">" + json.comment + "</a></span> (<span class=\"ipaddr\">" + json.ip + "</span>)" + json.adminbut).hide().show("slow");
+						obj.parents(".ipgroup").first().attr("id",json.id);
+						obj.parents("form").first().remove();
 					}
+				}
+				else if (json.result == "1") 
+				{
+					show_notice("Can't set empty name", "danger");
 				}
 				else show_notice("Unknown error", "danger");
 			}
@@ -405,7 +410,7 @@ $(document).ready(function(){
 	$(document).on('click',".movebutton",function()
 	{
 		var obj = $(this);
-		var dataString = $(this).parent().serialize();
+		var dataString = $(this).parents("form").first().serialize();
 		$.ajax({
 			url: 'ajax/movenode/' + $(this).attr("id") + "/",
 			type: "POST",
@@ -434,7 +439,7 @@ $(document).ready(function(){
 	$(document).on('click',".freeipeditbutton",function()
 	{
 		var obj = $(this);
-		var dataString = $(this).parent().serialize();
+		var dataString = $(this).parents("form").first().serialize();
 		$.ajax({
 			url: '/ajax/freeip/editcomment/' + $(this).attr("id") + "/",
 			type: "POST",

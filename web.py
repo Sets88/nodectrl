@@ -146,8 +146,8 @@ def edit_node(id):
     if request.method == 'POST':
         node = sw_api.get_by_id(id)
         node.comment = request.form['comment']
-        node.port = request.form['port']
-        node.set_ip(request.form['ip'])
+        node.set_port(request.form.get('port'))
+        node.set_ip(request.form.get('ip'))
         sw_api.save_all()
         return redirect("/")
     else:
@@ -167,6 +167,8 @@ def add_node(id):
             node.parent_id = None
         else:
             node.parent_id = id
+        if len(request.form.get('comment').strip()) < 1:
+            return redirect("/")
         node.comment = request.form['comment']
         node.catid = get_cat()[0]
         sw_api.add_node(node)
@@ -279,7 +281,7 @@ def free_ip():
 @require_permission("nodes_show_ips")
 def freeip_edit_comment(ipaddr):
     if request.method == 'POST':
-        sw_api.freeip_set_comment(ipaddr, request.form['comment'])
+        sw_api.freeip_set_comment(ipaddr, request.form.get('comment'))
         return redirect("/freeip/")
     else:
         nodes = sw_api.freeip_list(get_cat())
@@ -515,9 +517,12 @@ def ajax_edit_node(id):
     resp_dict = {}
     node = sw_api.get_by_id(id)
     if request.method == 'POST':
+        if len(request.form.get('comment', "").strip()) < 1:
+            resp_dict['result'] = 1
+            return jsonify(resp_dict)
         node.comment = request.form['comment']
-        node.port = request.form['port']
-        node.set_ip(request.form['ip'])
+        node.set_port(request.form.get('port'))
+        node.set_ip(request.form.get('ip'))
         sw_api.save_all()
         resp_dict['result'] = 0
         resp_dict['adminbut'] = render_template("adminbut.html", _=translation.ugettext, node=node, perms=Settings().get_permissions(auth.is_logged()))
@@ -537,12 +542,16 @@ def ajax_edit_node(id):
 def ajax_add_node(id):
     resp_dict = {}
     if request.method == 'POST':
-        node = Node()
-        node.parent_id = id
-        node.comment = request.form['comment']
-        node.catid = get_cat()[0]
-        node.set_ip("0.0.0.0")
-        sw_api.add_node(node)
+        if len(request.form.get('comment', "").strip()) > 0:
+            node = Node()
+            node.parent_id = id
+            node.comment = request.form['comment']
+            node.catid = get_cat()[0]
+            node.set_ip("0.0.0.0")
+            sw_api.add_node(node)
+        else:
+            resp_dict['result'] = 1
+            return jsonify(resp_dict)
 
         resp_dict['comment'] = node.comment
         resp_dict['port'] = node.port

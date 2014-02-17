@@ -2,20 +2,15 @@
 {% block nodes %}
 <div id="notice" class="hide"></div>
 <table>
+
 	<tr>
 		<td>
-			{{ _('Filter by name') }}:
+			<label>{{ _('Filter by name') }}</label>
+			<input class="srch form-control" name="srch" type="text">
 		</td>
 		<td>
-			{{ _('Filter by MAC') }}
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<input class="srch" name="srch" type="text">
-		</td>
-		<td>
-			<input class="srch2" name="srch2" type="text">
+			<label>{{ _('Filter by MAC') }}</label>
+			<input class="srch2 form-control" name="srch2" type="text">
 		</td>
 	</tr>
 </table>
@@ -24,7 +19,7 @@
 {% for node in nodes recursive %}
 <div class="ipgroup" id="{{node.id}}">
 	{% if act == "edit" and id == node.id %}
-		<div class="withip">
+		<div class="node withip">
 			<form class="form-horizontal" method="POST" action="/editnode/{{node.id}}/">
 				<div class="form-group">
 					<label class="col-sm-2 control-label">{{ _('Name') }}</label>
@@ -53,12 +48,12 @@
 			</form>
 		</div>
 	{% elif act == "move" and id == node.id %}
-		<div class="withip">
+		<div class="node withip">
 			{% include "moveform.html" %}
 		</div>
 	{% else %}
 		{% if node.ip %}
-		<div class="withip">
+		<div class="node withip">
 			{% if node.status %}
 				<span class="normal-ip">
 			{% else %}
@@ -80,7 +75,7 @@
 				</span>
 			{% endif %}
 		{% else %}
-		<div class="noip">
+		<div class="node noip">
 				{% if "nodes_show_ips" in perms %}
 				<small>
 					{% if node.port %}
@@ -99,9 +94,9 @@
 			<form action="/addnode/{{ node.id }}/" method="POST" class="navbar-form">
 				<div class="input-group">
 					<input name="comment" class="noevent form-control" value="" type="text">
-				<span class="input-group-btn">
-					<button name="submit" class="addbutton btn btn-primary" id="{{ node.id }}" type="submit">{{ _('Add') }}</button>
-				</span>
+					<span class="input-group-btn">
+						<button name="submit" class="addbutton btn btn-primary" id="{{ node.id }}" type="submit">{{ _('Add') }}</button>
+					</span>
 				</div>
 			</form>
 		{% endif %}
@@ -114,10 +109,14 @@
 {% endfor %}
 {% if "nodes_add_nodes" in perms %}
 	<div class="ipgroup">
-		<div class="">
+		<div class="node">
 			<form action="/addnode/0/" method="POST" class="navbar-form" id="addtoroot">
-				<input name="comment" class="noevent" value="" type="text">
-				<input name="submit" class="addbutton btn" id="0" value="{{ _('Add') }}" type="submit">
+				<div class="input-group">
+					<input name="comment" class="noevent form-control" value="" type="text">
+					<span class="input-group-btn">
+						<input name="submit" class="addbutton btn btn-primary" id="0" value="{{ _('Add') }}" type="submit">
+					</span>
+				</div>
 			</form>
 		</div>
 	</div>
