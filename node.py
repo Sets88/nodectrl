@@ -324,7 +324,7 @@ class Node(Base):
 
     def set_port(self, port):
         try:
-            port = int(port)
+            self.port = int(port)
         except ValueError:
             self.port = 0
             return False
