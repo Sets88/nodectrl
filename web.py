@@ -499,9 +499,9 @@ def ajax_edit_node(id):
         node.set_port(request.form.get('port'))
         node.set_ip(request.form.get('ip'))
         sw_api.save_all()
-        resp_dict['result'] = 0
         resp_dict['adminbut'] = render_template("adminbut.html", _=translation.ugettext, node=node, perms=Settings().get_permissions(auth.is_logged()))
-        return jsonify(resp_dict)
+    else:
+        resp_dict['html'] = render_template("editnode.html", _=translation.ugettext, node=node)
     resp_dict['comment'] = node.comment.replace('"', "&quot;")
     resp_dict['ip'] = node.ipaddr
     resp_dict['port'] = node.port
