@@ -147,8 +147,7 @@
 				<div class="panel-body">
 					<table width="100%">
 						<tr>
-							{% for cat in settings['categories'] %}
-						<td colspan=2>
+							{% for cat in settings['categories'] %}						<td colspan=2>
 								{% if act == "editcategory" and id == loop.index0 %}
 								<form action="" method="POST">
 									<div class="input-group">
