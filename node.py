@@ -209,7 +209,6 @@ class NodesAPI(object):
     def get_nodename_by_mac(self, catid, mac):
         nodes = self.session.query(Node).filter(
             Node.catid.in_(catid)).order_by("port").all()
-        self.nodelist
         self.nodelist = NodeList(nodes)
         nodeop = NodeOperations(Settings().get_nets(catid))
         res = nodeop.get_port_by_mac(self.nodelist[0].child_list, mac)
