@@ -597,7 +597,7 @@ def ajax_ipcalc():
 
 @app.route("/ajax/getswitchbymac/<mac>/")
 def ajax_get_nodename_by_mac(mac):
-    mac = mac.replace("-", ":")
+    mac = mac.replace("-", ":").strip()
     resp_dict = {}
     if re.match("^([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}$", mac) is None:
         resp_dict['result'] = "1"
