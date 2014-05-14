@@ -515,9 +515,9 @@ $(document).ready(function(){
 	$(document).on('keyup',".srch",function()
 	{
 		$('.ipgroup').hide().delay(500);
-		$(this).attr("value").trim().split("|").forEach(function (oritem) {
+		$(this).attr("value").split("|").forEach(function (oritem) {
 			var sel = false;
-			oritem.trim().split("&").forEach(function (anditem) {
+			oritem.split("&").forEach(function (anditem) {
 				if (!sel) {
 					sel = $('.ipgroup:contains("' + anditem + '")');
 				}
