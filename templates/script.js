@@ -24,6 +24,7 @@ jQuery.fn.centered_popup = function() {
 		this.css('margin-left','-151px');
 	}
 }
+
 function show_notice(text, type, timeout)
 {
 	obj = $("#notice");
@@ -46,6 +47,7 @@ function show_notice(text, type, timeout)
 	show_div();
 	timeout_link = setTimeout(hide_div, timeout);
 }
+
 function set_html(obj, html, timeout)
 {
 	timeout = typeof timeout !== 'undefined' ? timeout : 200;
@@ -55,6 +57,7 @@ function set_html(obj, html, timeout)
 		obj.show(timeout);
 	});
 }
+
 function append_html(obj, html, timeout)
 {
 	timeout = typeof timeout !== 'undefined' ? timeout : 200;
@@ -64,6 +67,7 @@ function append_html(obj, html, timeout)
 		obj.show(timeout);
 	});
 }
+
 function remove_object(obj, timeout)
 {
 	timeout = typeof timeout !== 'undefined' ? timeout : 200;
@@ -72,6 +76,11 @@ function remove_object(obj, timeout)
 		obj.remove();
 	});
 }
+
+function for_printing() {
+	document.write($(".ipgroup").filter(':visible').html())
+}
+
 $(document).ready(function(){
 
 	$noip_hidden=true;
@@ -501,8 +510,11 @@ $(document).ready(function(){
 	$(document).on('keyup',".srch",function()
 	{
 		$('.ipgroup').hide().delay(500);
-		var foundin = $('.ipgroup:contains("'+$(this).attr("value")+'")').delay(500).show();
+		$(this).attr("value").split("|").forEach(function (oritem) {
+			$('.ipgroup:contains("' + oritem + '")').delay(500).show();
+		});
 		return false;
+
 	});
 	$(document).on('keyup',".ipfreesrch",function()
 	{
@@ -545,6 +557,9 @@ $(document).ready(function(){
 
 	$(document).on('click',".ipgroup",function()
 	{
+		if ($(this).find("form").length) {
+			return false;
+		}
 		$(this).find(".noip").slideToggle(200);
 		return false;
 	});
