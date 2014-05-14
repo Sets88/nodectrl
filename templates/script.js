@@ -78,7 +78,12 @@ function remove_object(obj, timeout)
 }
 
 function for_printing() {
-	document.write($(".ipgroup").filter(':visible').html())
+	$("body").html($(".ipgroup").filter(':visible').html())
+	$(".adminbut").remove();
+	$("#addtoroot").remove();
+	$(".ipgroup div ul").css("padding", "0 0 0 40px");
+	$("div").removeAttr('class');
+	$("span").removeAttr('class');
 }
 
 $(document).ready(function(){
@@ -510,8 +515,17 @@ $(document).ready(function(){
 	$(document).on('keyup',".srch",function()
 	{
 		$('.ipgroup').hide().delay(500);
-		$(this).attr("value").split("|").forEach(function (oritem) {
-			$('.ipgroup:contains("' + oritem + '")').delay(500).show();
+		$(this).attr("value").trim().split("|").forEach(function (oritem) {
+			var sel = false;
+			oritem.trim().split("&").forEach(function (anditem) {
+				if (!sel) {
+					sel = $('.ipgroup:contains("' + anditem + '")');
+				}
+				else {
+					sel = sel.filter('.ipgroup:contains("' + anditem + '")');
+				}
+			});
+			sel.delay(500).show();
 		});
 		return false;
 
