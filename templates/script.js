@@ -571,7 +571,7 @@ $(document).ready(function(){
 
 	$(document).on('click',".ipgroup",function()
 	{
-		if ($(this).find("form").length) {
+		if ($(this).find(".editform").length) {
 			return false;
 		}
 		$(this).find(".noip").slideToggle(200);
