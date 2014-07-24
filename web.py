@@ -105,7 +105,7 @@ def nodes():
     """Display nodes list"""
     nodes = sw_api.list_nodes(get_cat())
     sw_api.close_session()
-    return render_template("nodes.html", _=translation.ugettext, nodes=nodes, addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), perms=Settings().get_permissions(auth.is_logged()))
+    return render_template("nodes.html", _=translation.ugettext, nodes=nodes, addlinks=Settings()['addlinks'], cats=enumerate(Settings()['categories']), perms=Settings().get_permissions(auth.is_logged()), currcats=get_cat())
 
 
 @app.route("/script.js")

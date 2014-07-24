@@ -59,6 +59,7 @@
 								<ul class="dropdown-menu">
 									{% for cat in cats %}
 										<li>
+											<a href="/cat/{% if cat[0]|string in currcats %}rem{% else %}add{% endif %}/{{ cat[0] }}"><input style="position: absolute;left: 5px;" type="checkbox" {% if cat[0]|string in currcats %}checked{% endif %}></a>
 											<a href="/cat/{{ cat[0] }}">{{ cat[1][0] }}</a>
 										</li>
 									{% endfor %}
