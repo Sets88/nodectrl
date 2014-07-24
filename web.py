@@ -191,6 +191,32 @@ def set_cat(catid):
         session["cat"] = catid
     return redirect("/")
 
+@app.route("/cat/add/<int:catid>")
+@login_required
+def add_cat(catid):
+    """Add category of nodes"""
+    cats = get_cat()
+    try:
+        if Settings()['categories'][int(catid)]:
+            cats.append(catid)
+    except (IndexError, ValueError):
+        return redirect("/")
+    session["cat"] = ",".join(str(x) for x in set(cats))
+    return redirect("/")
+
+@app.route("/cat/rem/<int:catid>")
+@login_required
+def remove_cat(catid):
+    """Remove category of nodes"""
+    cats = get_cat()
+    try:
+        if Settings()['categories'][int(catid)]:
+            cats.remove(str(catid))
+    except (IndexError, ValueError):
+        return redirect("/")
+    session["cat"] = ",".join(str(x) for x in set(cats))
+    return redirect("/")
+
 @app.route("/checknodes/<int:id>/")
 @login_required
 @require_permission("nodes_check_nodes")
