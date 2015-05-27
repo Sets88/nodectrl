@@ -45,6 +45,7 @@ class NodeOperations(object):
         for net in self.nets:
             nets.append(str(net[0]))
         pipe = os.popen("nmap -n --max-parallelism 500 --min-rtt-timeout=200ms -sP -oX - %s" % " ".join(nets))
+        print "nmap -n --max-parallelism 500 --min-rtt-timeout=200ms -sP -oX - %s" % " ".join(nets)
         out = pipe.read()
         ecode = pipe.close()
         if ecode:

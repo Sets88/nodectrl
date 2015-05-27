@@ -11,6 +11,7 @@ import gettext
 from settings import Settings
 from auth import Auth
 from functools import wraps
+import json
 import os
 import re
 
@@ -34,9 +35,12 @@ except (IOError):
 # Permissions
 Settings().join_permissions(node_permissons)
 
-def get_cat():
+def get_cat(categories=None):
     """Gets cat from session otherwise returns 0"""
-    cats = str(session.get("cat")).split(",")
+    if categories is None:
+        cats = str(session.get("cat")).split(",")
+    else:
+        cats = str(categories).split(",")
     try:
         for cat in cats:
             if Settings()['categories'][int(cat)]:
@@ -773,6 +777,25 @@ def api_get_nodename_by_mac(mac, hashh):
                 resp_dict['error'] = "unknown error"
         return jsonify(resp_dict)
     abort(404)
+
+@app.route("/api/getnodelist/<cat>/<hashh>/")
+def api_get_nodelist(cat, hashh):
+    def nodes_to_dict(nodes):
+        node_list = []
+        for node in nodes:
+            item = {}
+            item['id'] = node.id
+            item['comment'] = node.comment
+            item['ip'] = node.ipaddr
+            item['child_list'] = nodes_to_dict(node.child_list)
+            node_list.append(item)
+        return node_list
+
+    if auth.check_ip_hash(hashh, request.remote_addr):
+        nodes = sw_api.list_nodes(get_cat(cat))
+        return json.dumps(nodes_to_dict(nodes))
+    abort(404)
+
 
 if __name__ == "__main__":
     app.run()
