@@ -768,10 +768,12 @@ def api_get_nodename_by_mac(mac, hashh):
             resp_dict['result'] = "1"
             resp_dict['error'] = "wrong mac format"
         else:
-            res = sw_api.get_nodename_by_mac(get_cat(), mac)
+            res = sw_api.get_node_by_mac(get_cat(), mac)
             if res:
                 resp_dict['result'] = "0"
-                resp_dict['comment'] = res
+                resp_dict['comment'] = res.comment
+                resp_dict['id'] = res.id
+                resp_dict['ip'] = res.ipaddr
             else:
                 resp_dict['result'] = "1"
                 resp_dict['error'] = "unknown error"

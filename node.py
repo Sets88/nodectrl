@@ -218,6 +218,18 @@ class NodesAPI(object):
                     return node.comment
             return res[0].comment
 
+    def get_node_by_mac(self, catid, mac):
+        nodes = self.session.query(Node).filter(
+            Node.catid.in_(catid)).order_by("port").all()
+        self.nodelist = NodeList(nodes)
+        nodeop = NodeOperations(Settings().get_nets(catid))
+        res = nodeop.get_port_by_mac(self.nodelist[0].child_list, mac)
+        if res:
+            for node in res[0].child_list:
+                if int(node.port) == int(res[1]):
+                    return node
+            return res[0]
+
     def freeip_list(self, catid):
 
         def find_freeip(freeips, ipaddr, return_none=False, exists=False):
@@ -313,6 +325,9 @@ class Node(Base):
             ip = struct.unpack("!I", socket.inet_aton(ipaddr))[0]
             self.ip = ip
             self.ipaddr = ipaddr
+            f = open("/tmp/111.log", "a")
+            f.write("%d %s %s\n" % (ip, ipaddr, self.ip))
+            f.close()
         except:
             if len(ipaddr) == 0:
                 self.ip = 0
